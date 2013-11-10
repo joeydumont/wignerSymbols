@@ -10,6 +10,7 @@
 using namespace std;
 using namespace arma;
 
+// This is a test.
 // Orthogonality relations and sum rules for the 3j symbols [Brink & Satchler, pp. 136+139].
 double firstOrthoRelation3j(double l1, double l2, double l3, double m3);
 double sumOverM23j(double l1, double l2, double l3, double m3);
