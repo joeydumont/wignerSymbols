@@ -1,3 +1,10 @@
+/*******************************************************-/
+ * This source code is subject to the terms of the GNU  -/
+ * Lesser Public License. If a copy of the	LGPL was not-/
+ * distributed with this file, you	can obtain one at   -/
+ * https://www.gnu.org/licenses/lgpl.html				-/
+ ********************************************************/ 
+
 #include "wignerSymbols.h"
 
 namespace WignerSymbols {
