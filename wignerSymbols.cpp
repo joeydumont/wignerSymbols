@@ -1,7 +1,7 @@
 #include "wignerSymbols.h"
 
-namespace varPhase {
-arma::colvec c_wigner3j(double l2, double l3,
+namespace WignerSymbols {
+std::vector<double> wigner3j(double l2, double l3,
 					double m1, double m2, double m3)
 {
 	// We compute the numeric limits of double precision. 
@@ -19,7 +19,7 @@ arma::colvec c_wigner3j(double l2, double l3,
 		&& std::fabs(m3) <= l3+eps
 		);
 
-	if (!select) return arma::zeros<arma::colvec>(1);
+	if (!select) return std::vector<double>(1,0.0);
 
 	// We compute the limits of l1. 
 	double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
@@ -27,47 +27,47 @@ arma::colvec c_wigner3j(double l2, double l3,
 
 	// We compute the size of the resulting array.
 	int size = (int)std::floor(l1max-l1min+1.0+eps);
-	arma::colvec thrcof(size);
+	std::vector<double> thrcof(size,0.0);
 
 	// If l1min=l1max, we have an analytical formula.
 	if (size==1)
 	{
-		thrcof(0) = pow(-1.0,std::floor(std::fabs(l2+m2-l3+m3)))/sqrt(l1min+l2+l3+1.0);
+		thrcof[0] = pow(-1.0,std::floor(std::fabs(l2+m2-l3+m3)))/sqrt(l1min+l2+l3+1.0);
 	}
 
 	// Another special case where the recursion relation fails.
 	else
 	{
 		// We start with an arbitrary value. 
-		thrcof(0) = srtiny;
+		thrcof[0] = srtiny;
 
 		// From now on, we check the variation of |alpha(l1)|. 
 		double alphaOld, alphaNew, beta, l1(l1min);
 		if (l1min==0.0)
-			alphaNew = -(m3-m2+2.0*c_wigner3j_auxB(l1,l2,l3,m1,m2,m3))/c_wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
+			alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
 		else
-			alphaNew = -c_wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
-							/(l1min*c_wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
+			alphaNew = -wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
+							/(l1min*wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
 
 		// We compute the two-term recursion.
-		thrcof(1) = alphaNew*thrcof(0);
+		thrcof[1] = alphaNew*thrcof[0];
 
 		// If size > 2, we start the forward recursion.
 		if (size>2)
 		{
 			// We start with an arbitrary value. 
-			thrcof(0) = srtiny;
+			thrcof[0] = srtiny;
 	
 			// From now on, we check the variation of |alpha(l1)|. 
 			double alphaOld, alphaNew, beta, l1(l1min);
 			if (l1min==0.0)
-				alphaNew = -(m3-m2+2.0*c_wigner3j_auxB(l1,l2,l3,m1,m2,m3))/c_wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
+				alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
 			else
-				alphaNew = -c_wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
-							/(l1min*c_wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
+				alphaNew = -wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
+							/(l1min*wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
 	
 			// We compute the two-term recursion.
-			thrcof(1) = alphaNew*thrcof(0);
+			thrcof[1] = alphaNew*thrcof[0];
 	
 			// We compute the rest of the recursion.
 			int i = 1;
@@ -80,20 +80,23 @@ arma::colvec c_wigner3j(double l2, double l3,
 				l1 += 1.0;				// l1 = l1+1
 	
 				// New coefficients in recursion. 
-				alphaNew = -c_wigner3j_auxB(l1,l2,l3,m1,m2,m3)
-							/(l1*c_wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
+				alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
+							/(l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
 	
-				beta = -(l1+1.0)*c_wigner3j_auxA(l1,l2,l3,m1,m2,m3)
-						/(l1*c_wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
+				beta = -(l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3)
+						/(l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
 	
 				// Application of the recursion. 
-				thrcof(i) = alphaNew*thrcof(i-1)+beta*thrcof(i-2);
+				thrcof[i] = alphaNew*thrcof[i-1]+beta*thrcof[i-2];
 	
 				// We check if we are overflowing.
-				if (std::fabs(thrcof(i))>srhuge)
+				if (std::fabs(thrcof[i])>srhuge)
 				{
 					std::cout << "We renormalized the forward recursion." << std::endl;
-					thrcof(arma::span(0,i)) /= srhuge;
+					for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.begin()+i; ++it)
+					{
+						*it /= srhuge;
+					}
 				}
 	
 				// This piece of code checks whether we have reached
@@ -113,17 +116,17 @@ arma::colvec c_wigner3j(double l2, double l3,
 			if (i!=size-1)
 			{
 				// We keep the two terms around l1mid to compute the factor later.
-				double l1midm1(thrcof(i-2)),l1mid(thrcof(i-1)),l1midp1(thrcof(i));
+				double l1midm1(thrcof[i-2]),l1mid(thrcof[i-1]),l1midp1(thrcof[i]);
 	
 				// We compute the backward recursion by providing an arbitrary 
 				// startint value.
-				thrcof(size-1) = srtiny;
+				thrcof[size-1] = srtiny;
 	
 				// We compute the two-term recursion.
 				l1 = l1max;
-				alphaNew = -c_wigner3j_auxB(l1,l2,l3,m1,m2,m3)
-								/((l1+1.0)*c_wigner3j_auxA(l1,l2,l3,m1,m2,m3));
-				thrcof(size-2) = alphaNew*thrcof(size-1);
+				alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
+								/((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
+				thrcof[size-2] = alphaNew*thrcof[size-1];
 	
 				// We compute the rest of the backward recursion.
 				int j = size-2;
@@ -134,29 +137,35 @@ arma::colvec c_wigner3j(double l2, double l3,
 					l1 -= 1.0;		// l1 = l1-1
 	
 					// New coefficients in recursion. 
-					alphaNew = -c_wigner3j_auxB(l1,l2,l3,m1,m2,m3)
-								/((l1+1.0)*c_wigner3j_auxA(l1,l2,l3,m1,m2,m3));
-					beta = -l1*c_wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3)
-									/((l1+1.0)*c_wigner3j_auxA(l1,l2,l3,m1,m2,m3));
+					alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
+								/((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
+					beta = -l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3)
+									/((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
 	
 					// Application of the recursion. 
-					thrcof(j) = alphaNew*thrcof(j+1)+beta*thrcof(j+2);
+					thrcof[j] = alphaNew*thrcof[j+1]+beta*thrcof[j+2];
 	
 					// We check if we are overflowing.
-					if (std::fabs(thrcof(j)>srhuge))
+					if (std::fabs(thrcof[j]>srhuge))
 					{
 						std::cout << "We renormalized the backward recursion." << std::endl;
-						thrcof(arma::span(j,size-1)) /= srhuge;
+						for (std::vector<double>::iterator it = thrcof.begin()+j; it != thrcof.end(); ++it)
+						{
+							*it /= srhuge;
+						}
 					}
 			
 				} while (j>(i-2)); // Loop stops when we are at l1=l1mid-1.
 	
 				// We now compute the scaling factor for the forward recursion.
-				double lambda = (l1midp1*thrcof(j+2)+l1mid*thrcof(j+1)+l1midm1*thrcof(j))
+				double lambda = (l1midp1*thrcof[j+2]+l1mid*thrcof[j+1]+l1midm1*thrcof[j])
 										/(l1midp1*l1midp1+l1mid*l1mid+l1midm1*l1midm1);
 	
 				// We scale the forward recursion.
-				thrcof(arma::span(0,j-1)) *= lambda;
+				for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.begin()+j; ++it)
+				{
+					*it *= lambda;
+				}
 			}
 		}
 	}
@@ -165,14 +174,18 @@ arma::colvec c_wigner3j(double l2, double l3,
 	double sum = 0.0;
 	for (int k=0;k<size;k++)
 	{
-		sum += (2.0*(l1min+k)+1.0)*thrcof(k)*thrcof(k);
+		sum += (2.0*(l1min+k)+1.0)*thrcof[k]*thrcof[k];
 	}
-	double c1 = pow(-1.0,l2-l3-m1)*sgn(thrcof(size-1))/sqrt(sum);
+	double c1 = pow(-1.0,l2-l3-m1)*sgn(thrcof[size-1])/sqrt(sum);
 
-	return thrcof*c1;
+	for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.end(); ++it)
+	{
+		*it *= c1;
+	}
+	return thrcof;
 }
 
-double c_wigner3j(double l1, double l2, double l3, 
+double wigner3j(double l1, double l2, double l3, 
 					double m1, double m2, double m3)
 {
 	// We enforce the selection rules.
@@ -195,10 +208,10 @@ double c_wigner3j(double l1, double l2, double l3,
 	// We fetch the proper value in the array.
 	int index = (int)l1-l1min;
 
-	return c_wigner3j(l2,l3,m1,m2,m3)(index);
+	return wigner3j(l2,l3,m1,m2,m3)[index];
 }
 
-arma::colvec c_wigner6j(double l2, double l3,
+std::vector<double> wigner6j(double l2, double l3,
 					double l4, double l5, double l6)
 {
 	// We compute the numeric limits of double precision. 
@@ -223,7 +236,7 @@ arma::colvec c_wigner6j(double l2, double l3,
 		&& std::floor(l4+l5+l3)==(l4+l5+l3)
 		);
 
-	if (!select) return arma::zeros<arma::colvec>(1);
+	if (!select) return std::vector<double>(1,0.0);
 
 	// We compute the limits of l1.
 	double l1min = std::max(std::fabs(l2-l3),std::fabs(l5-l6));
@@ -231,50 +244,50 @@ arma::colvec c_wigner6j(double l2, double l3,
 
 	// We compute the size of the resulting array.
 	unsigned int size = (int)std::floor(l1max-l1min+1.0+eps);
-	arma::colvec sixcof(size);
+	std::vector<double> sixcof(size,0.0);
 
 	// If l1min=l1max, we have an analytical formula.
 	if (size==1)
 	{
-		sixcof(0) = 1.0/sqrt((l1min+l1min+1.0)*(l4+l4+1.0));
-		sixcof(0) *= ((int)std::floor(l2+l3+l5+l6+eps) & 1 ? -1.0 : 1.0);
+		sixcof[0] = 1.0/sqrt((l1min+l1min+1.0)*(l4+l4+1.0));
+		sixcof[0] *= ((int)std::floor(l2+l3+l5+l6+eps) & 1 ? -1.0 : 1.0);
 	}
 
 	// Otherwise, we start the forward recursion.
 	else
 	{
 		// We start with an arbitrary value. 
-		sixcof(0) = srtiny;
+		sixcof[0] = srtiny;
 
 		// From now on, we check the variation of |alpha(l1)|.
 		double alphaOld, alphaNew, beta, l1(l1min);
 
 		if (l1min==0)
-			alphaNew = -(l2*(l2+1.0)+l3*(l3+1.0)+l5*(l5+1.0)+l6*(l6+1.0)-2.0*l4*(l4+1.0))/c_wigner6j_auxA(1.0,l2,l3,l4,l5,l6);
+			alphaNew = -(l2*(l2+1.0)+l3*(l3+1.0)+l5*(l5+1.0)+l6*(l6+1.0)-2.0*l4*(l4+1.0))/wigner6j_auxA(1.0,l2,l3,l4,l5,l6);
 
 		else
-			alphaNew = -c_wigner6j_auxB(l1,l2,l3,l4,l5,l6)
-							/(l1min*c_wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
+			alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
+							/(l1min*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
 
 		// We compute the two-term recursion.
-		sixcof(1) = alphaNew*sixcof(0);
+		sixcof[1] = alphaNew*sixcof[0];
 
 		if (size>2)
 		{
 			// We start with an arbitrary value. 
-			sixcof(0) = srtiny;
+			sixcof[0] = srtiny;
 	
 			// From now on, we check the variation of |alpha(l1)|. 
 			double alphaOld, alphaNew, beta, l1(l1min);
 			if (l1min==0)
-				alphaNew = -(l2*(l2+1.0)+l3*(l3+1.0)+l5*(l5+1.0)+l6*(l6+1.0)-2.0*l4*(l4+1.0))/c_wigner6j_auxA(1.0,l2,l3,l4,l5,l6);
+				alphaNew = -(l2*(l2+1.0)+l3*(l3+1.0)+l5*(l5+1.0)+l6*(l6+1.0)-2.0*l4*(l4+1.0))/wigner6j_auxA(1.0,l2,l3,l4,l5,l6);
 
 			else
-				alphaNew = -c_wigner6j_auxB(l1,l2,l3,l4,l5,l6)
-							/(l1min*c_wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
+				alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
+							/(l1min*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
 	
 			// We compute the two-term recursion.
-			sixcof(1) = alphaNew*sixcof(0);
+			sixcof[1] = alphaNew*sixcof[0];
 	
 			// We compute the rest of the recursion.
 			int i = 1;
@@ -287,20 +300,23 @@ arma::colvec c_wigner6j(double l2, double l3,
 				l1 += 1.0;				// l1 = l1+1
 	
 				// New coefficients in recursion. 
-				alphaNew = -c_wigner6j_auxB(l1,l2,l3,l4,l5,l6)
-							/(l1*c_wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
+				alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
+							/(l1*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
 	
-				beta = -(l1+1.0)*c_wigner6j_auxA(l1,l2,l3,l4,l5,l6)
-						/(l1*c_wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
+				beta = -(l1+1.0)*wigner6j_auxA(l1,l2,l3,l4,l5,l6)
+						/(l1*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
 	
 				// Application of the recursion. 
-				sixcof(i) = alphaNew*sixcof(i-1)+beta*sixcof(i-2);
+				sixcof[i] = alphaNew*sixcof[i-1]+beta*sixcof[i-2];
 	
 				// We check if we are overflowing.
-				if (std::fabs(sixcof(i)>srhuge))
+				if (std::fabs(sixcof[i]>srhuge))
 				{
 					std::cout << "We renormalized the forward recursion." << std::endl;
-					sixcof(arma::span(0,i)) /= srhuge;
+					for (std::vector<double>::iterator it = sixcof.begin(); it != sixcof.begin()+i; ++it)
+					{
+						*it /= srhuge;
+					}
 				}
 	
 				// This piece of code checks whether we have reached
@@ -320,17 +336,17 @@ arma::colvec c_wigner6j(double l2, double l3,
 			if (i!=size-1)
 			{
 				// We keep the two terms around l1mid to compute the factor later.
-				double l1midm1(sixcof(i-2)),l1mid(sixcof(i-1)),l1midp1(sixcof(i));
+				double l1midm1(sixcof[i-2]),l1mid(sixcof[i-1]),l1midp1(sixcof[i]);
 	
 				// We compute the backward recursion by providing an arbitrary 
 				// startint value.
-				sixcof(size-1) = srtiny;
+				sixcof[size-1] = srtiny;
 	
 				// We compute the two-term recursion.
 				l1 = l1max;
-				alphaNew = -c_wigner6j_auxB(l1,l2,l3,l4,l5,l6)
-								/((l1+1.0)*c_wigner6j_auxA(l1,l2,l3,l4,l5,l6));
-				sixcof(size-2) = alphaNew*sixcof(size-1);
+				alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
+								/((l1+1.0)*wigner6j_auxA(l1,l2,l3,l4,l5,l6));
+				sixcof[size-2] = alphaNew*sixcof[size-1];
 	
 				// We compute the rest of the backward recursion.
 				int j = size-2;
@@ -341,29 +357,35 @@ arma::colvec c_wigner6j(double l2, double l3,
 					l1 -= 1.0;		// l1 = l1-1
 	
 					// New coefficients in recursion. 
-					alphaNew = -c_wigner6j_auxB(l1,l2,l3,l4,l5,l6)
-								/((l1+1.0)*c_wigner6j_auxA(l1,l2,l3,l4,l5,l6));
-					beta = -l1*c_wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6)
-								/((l1+1.0)*c_wigner6j_auxA(l1,l2,l3,l4,l5,l6));
+					alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
+								/((l1+1.0)*wigner6j_auxA(l1,l2,l3,l4,l5,l6));
+					beta = -l1*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6)
+								/((l1+1.0)*wigner6j_auxA(l1,l2,l3,l4,l5,l6));
 	
 					// Application of the recursion. 
-					sixcof(j) = alphaNew*sixcof(j+1)+beta*sixcof(j+2);
+					sixcof[j] = alphaNew*sixcof[j+1]+beta*sixcof[j+2];
 	
 					// We check if we are overflowing.
-					if (std::fabs(sixcof(j)>srhuge))
+					if (std::fabs(sixcof[j]>srhuge))
 					{
 						std::cout << "We renormalized the backward recursion." << std::endl;
-						sixcof(arma::span(j,size-1)) /= srhuge;
+						for (std::vector<double>::iterator it = sixcof.begin()+j; it != sixcof.end(); ++it)
+						{
+							*it /= srhuge;
+						}
 					}
 			
 				} while (j>(i-2)); // Loop stops when we are at l1=l1mid-1.
 	
 				// We now compute the scaling factor for the forward recursion.
-				double lambda = (l1midp1*sixcof(j+2)+l1mid*sixcof(j+1)+l1midm1*sixcof(j))
+				double lambda = (l1midp1*sixcof[j+2]+l1mid*sixcof[j+1]+l1midm1*sixcof[j])
 									/(l1midp1*l1midp1+l1mid*l1mid+l1midm1*l1midm1);
 	
 				// We scale the forward recursion.
-				sixcof(arma::span(0,j-1)) *= lambda;
+				for (std::vector<double>::iterator it = sixcof.begin(); it != sixcof.begin()+j; ++it)
+				{
+					*it *= lambda;
+				}
 			}
 		}
 	}
@@ -372,14 +394,18 @@ arma::colvec c_wigner6j(double l2, double l3,
 	double sum = 0.0;
 	for (int k=0;k<size;k++)
 	{
-		sum += (2.0*(l1min+k)+1.0)*(2.0*l4+1.0)*sixcof(k)*sixcof(k);
+		sum += (2.0*(l1min+k)+1.0)*(2.0*l4+1.0)*sixcof[k]*sixcof[k];
 	}
-	double c1 = pow(-1.0,std::floor(l2+l3+l5+l6+eps))*sgn(sixcof(size-1))/sqrt(sum);
+	double c1 = pow(-1.0,std::floor(l2+l3+l5+l6+eps))*sgn(sixcof[size-1])/sqrt(sum);
 
-	return sixcof*c1;
+	for (std::vector<double>::iterator it = sixcof.begin(); it != sixcof.end(); ++it)
+	{
+		*it *= c1;
+	}
+	return sixcof;
 }
 
-double c_wigner6j(double l1, double l2, double l3, 
+double wigner6j(double l1, double l2, double l3, 
 					double l4, double l5, double l6)
 {
 	// We enforce the selection rules. 
@@ -407,10 +433,10 @@ double c_wigner6j(double l1, double l2, double l3,
 	double l1min = std::max(std::fabs(l2-l3),std::fabs(l5-l6));
 	int index = (int)l1-l1min;
 
-	return c_wigner6j(l2,l3,l4,l5,l6)(index);
+	return wigner6j(l2,l3,l4,l5,l6)[index];
 }
 
-double c_wigner3j_auxA(double l1, double l2, double l3,
+double wigner3j_auxA(double l1, double l2, double l3,
 						double m1, double m2, double m3)
 {
 	double T1 = l1*l1-pow(l2-l3,2.0);
@@ -420,7 +446,7 @@ double c_wigner3j_auxA(double l1, double l2, double l3,
 	return sqrt(T1*T2*T3);
 }
 
-double c_wigner3j_auxB(double l1, double l2, double l3, 
+double wigner3j_auxB(double l1, double l2, double l3, 
 						double m1, double m2, double m3)
 {
 	double T1 = -(2.0*l1+1.0);
@@ -431,7 +457,7 @@ double c_wigner3j_auxB(double l1, double l2, double l3,
 	return T1*(T2-T3-T4);
 }
 
-double c_wigner6j_auxA(double l1, double l2, double l3,
+double wigner6j_auxA(double l1, double l2, double l3,
 						double l4, double l5, double l6)
 {
 	double T1 = l1*l1-pow(l2-l3,2.0);
@@ -442,7 +468,7 @@ double c_wigner6j_auxA(double l1, double l2, double l3,
 	return sqrt(T1*T2*T3*T4);
 }
 
-double c_wigner6j_auxB(double l1, double l2, double l3,
+double wigner6j_auxB(double l1, double l2, double l3,
 						double l4, double l5, double l6)
 {
 	double T0 = 2.0*l1+1.0;

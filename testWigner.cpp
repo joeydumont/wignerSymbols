@@ -5,7 +5,7 @@
 #include <armadillo>
 #include <time.h>
 
-#define EPS 1.0e-10
+#define EPS 1.0e-5
 
 using namespace std;
 using namespace arma;
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 					if (!test)
 						cout << "The first orthogonality test failed for \n\tl1 = " << l1 << "\n\tl2 = " << l2 << "\n\tl3 = " << l3 << "\n\tm3 = " << m3 << endl;
 
-					//if (l3!=0.0) test = sumOverM23j(l1,l2,l3,m3);
+					if (l3!=0.0) test = sumOverM23j(l1,l2,l3,m3);
 
 					if (!test)
 						cout << "The sum over M2 test failed for \n\tl1 = " << l1 << "\n\tl2 = " << l2 << "\n\tl3 = " << l3 << "\n\tm3 = " << m3 << endl;
@@ -103,6 +103,14 @@ int main(int argc, char* argv[])
 		}
 	}
 
+		// We print some coefficients.
+	std::vector<double> wigner6j = WignerSymbols::wigner6j(16,14,13,15,15);
+	for (std::vector<double>::iterator it = wigner6j.begin(); it != wigner6j.end(); ++it)
+	{
+		std::cout << std::setprecision(10) << std::scientific <<  *it << std::endl;
+	}
+	std::cout << WignerSymbols::wigner6j(11,16,14,13,15,15) << std::endl;
+
 	return 0;
 }
 
@@ -118,8 +126,8 @@ double firstOrthoRelation3j(double l1, double l2, double l3, double m3)
 	{
 		for (int j=0;j<m2Size;j++)
 		{
-			sum += (2.0*l3+1.0)*varPhase::c_wigner3j(l1,l2,l3,((double)(-l1+i)),((double)(-l2+j)),m3)
-				*varPhase::c_wigner3j(l1,l2,l3,((double)(-l1+i)),((double)(-l2+j)),m3);
+			sum += (2.0*l3+1.0)*WignerSymbols::wigner3j(l1,l2,l3,((double)(-l1+i)),((double)(-l2+j)),m3)
+				*WignerSymbols::wigner3j(l1,l2,l3,((double)(-l1+i)),((double)(-l2+j)),m3);
 		}
 	}
 
@@ -142,7 +150,7 @@ double sumOverM23j(double l1, double l2, double l3, double m3)
 			double m2 = -l2+j;
 
 			if (std::fabs(m1+m2-m3)<1.0e-6)
-				sum += m2*(2.0*l3+1.0)*pow(varPhase::c_wigner3j(l1,l2,l3,m1,m2,-m3),2.0);
+				sum += m2*(2.0*l3+1.0)*pow(WignerSymbols::wigner3j(l1,l2,l3,m1,m2,-m3),2.0);
 		}
 	}
 
@@ -162,7 +170,7 @@ double firstSumOverL3(double l1, double l2, double l6)
 	for (int i=0;i<l3max-l3min+1;i++)
 	{
 		double l3 = l3min+i;
-		sum += pow(-1.,2.0*l3)*(2.0*l3+1.0)*varPhase::c_wigner6j(l1,l2,l3,l1,l2,l6);
+		sum += pow(-1.,2.0*l3)*(2.0*l3+1.0)*WignerSymbols::wigner6j(l1,l2,l3,l1,l2,l6);
 	}
 
 	double diff = std::fabs(1.0-sum);
@@ -181,7 +189,7 @@ double seconSumOverL3(double l1, double l2, double l6)
 	for (int i=0;i<l3max-l3min+1;i++)
 	{
 		double l3 = l3min+i;
-		sum += pow(-1.,l1+l2+l3)*(2.0*l3+1.0)*varPhase::c_wigner6j(l1,l2,l3,l2,l1,l6);
+		sum += pow(-1.,l1+l2+l3)*(2.0*l3+1.0)*WignerSymbols::wigner6j(l1,l2,l3,l2,l1,l6);
 	}
 
 	double value = (l6==0.0 ? sqrt((2.*l1+1.)*(2.*l2+1.)) : 0.0) ;
@@ -198,7 +206,7 @@ double timingWignerSymbols(double l2, double l3, double m1, double m2, double m3
 	clock_t start = clock();
 
 	// We call the subroutine.
-	colvec test = varPhase::c_wigner3j(l2,l3,m1,m2,m3);
+	colvec test = WignerSymbols::wigner3j(l2,l3,m1,m2,m3);
 
 	clock_t end = clock();
 
@@ -211,7 +219,7 @@ double timingWignerSymbolsF(double l2, double l3, double m1, double m2, double m
 	clock_t start = clock();
 
 	// We call the subroutine.
-	double test = varPhase::wigner3j(l2+l3,l2,l3,m1,m2,m3);
+	double test = WignerSymbols::wigner3j(l2+l3,l2,l3,m1,m2,m3);
 
 	clock_t end = clock();
 
