@@ -1,15 +1,15 @@
 /*******************************************************-/
  * This source code is subject to the terms of the GNU  -/
- * Lesser Public License. If a copy of the	LGPL was not-/
- * distributed with this file, you	can obtain one at   -/
- * https://www.gnu.org/licenses/lgpl.html				-/
+ * Lesser Public License. If a copy of the LGPL was not -/
+ * distributed with this file, you can obtain one at    -/
+ * https://www.gnu.org/licenses/lgpl.html.              -/
  ********************************************************/ 
 
 #include "wignerSymbols.h"
 
 namespace WignerSymbols {
 std::vector<double> wigner3j(double l2, double l3,
-					double m1, double m2, double m3)
+			     double m1, double m2, double m3)
 {
 	// We compute the numeric limits of double precision. 
 	double huge = std::numeric_limits<double>::max();
