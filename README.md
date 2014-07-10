@@ -10,16 +10,16 @@ coefficient. It also computes the Clebsch-Gordan coefficients.
 This library uses CMake to help the build process. First, download the source code. 
 It is recommended to create a separate directory for building, i.e.
 ```bash 
-    mkdir build/.
+mkdir build/.
 ```
 Then, run
 ```bash
-    cmake .. && make && sudo make install.
+cmake .. && make && sudo make install.
 ```
 By default, the library is installed to `/usr/lib/` and the include files are in `/usr/include/`.
 To install to another directory, say `/usr/local/`, use the command-line argument
 ```bash
-    cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local && make && sudo make install.
+cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local && make && sudo make install.
 ```
 
 ## API documentation
