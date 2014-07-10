@@ -50,7 +50,7 @@ std::vector<double> wigner3j(double l2, double l3,
 		thrcof[0] = srtiny;
 
 		// From now on, we check the variation of |alpha(l1)|. 
-		double alphaOld, alphaNew, beta, l1(l1min);
+		double alphaNew, l1(l1min);
 		if (l1min==0.0)
 			alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
 		else
@@ -268,7 +268,7 @@ std::vector<double> wigner6j(double l2, double l3,
 		sixcof[0] = srtiny;
 
 		// From now on, we check the variation of |alpha(l1)|.
-		double alphaOld, alphaNew, beta, l1(l1min);
+		double alphaNew, l1(l1min);
 
 		if (l1min==0)
 			alphaNew = -(l2*(l2+1.0)+l3*(l3+1.0)+l5*(l5+1.0)+l6*(l6+1.0)-2.0*l4*(l4+1.0))/wigner6j_auxA(1.0,l2,l3,l4,l5,l6);
@@ -298,7 +298,7 @@ std::vector<double> wigner6j(double l2, double l3,
 			sixcof[1] = alphaNew*sixcof[0];
 	
 			// We compute the rest of the recursion.
-			int i = 1;
+			unsigned int i = 1;
 			bool alphaVar = false;
 			do
 			{
@@ -357,7 +357,7 @@ std::vector<double> wigner6j(double l2, double l3,
 				sixcof[size-2] = alphaNew*sixcof[size-1];
 	
 				// We compute the rest of the backward recursion.
-				int j = size-2;
+				unsigned int j = size-2;
 				do
 				{
 					// Bookkeeping
@@ -400,7 +400,7 @@ std::vector<double> wigner6j(double l2, double l3,
 
 	// We compute the overall factor.
 	double sum = 0.0;
-	for (int k=0;k<size;k++)
+	for (unsigned int k=0;k<size;k++)
 	{
 		sum += (2.0*(l1min+k)+1.0)*(2.0*l4+1.0)*sixcof[k]*sixcof[k];
 	}

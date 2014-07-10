@@ -1,13 +1,16 @@
 # Name of project
 project(wignerSymbols)
 set (wignerSymbols_VERSION_MAJOR 0)
-set (wignerSymbols_VERSION_MINOR 0)
+set (wignerSymbols_VERSION_MINOR 1)
 set (wignerSymbols_VERSION_RELEASE 1)
 
 # CMake config
 cmake_minimum_required(VERSION 2.8)
 set (CMAKE_INSTALL_PREFIX /usr/)
+
+# Compiler config
 enable_language (Fortran)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -march=native")
 
 # Included files
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
