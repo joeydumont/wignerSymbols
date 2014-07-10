@@ -22,6 +22,7 @@ C             RACAH COEFFICIENTS, VECTOR ADDITION COEFFICIENTS,
 C             WIGNER COEFFICIENTS
 C***AUTHOR  Gordon, R. G., Harvard University
 C           Schulten, K., Max Planck Institute
+C***MODIFIED BY J. Dumont, Université Laval
 C***DESCRIPTION
 C
 C *Usage:
@@ -156,7 +157,7 @@ C  point number, approximately.
 C
 C     LMATCH = ZERO
       M1 = - M2 - M3
-C
+C***THIS IS NOW DONE IN THE C++ INTERFACE
 C  Check error conditions 1 and 2.
 C      IF((L2-ABS(M2)+EPS.LT.ZERO).OR.
 C     +   (L3-ABS(M3)+EPS.LT.ZERO))THEN
@@ -179,6 +180,7 @@ C
       L1MIN = MAX(ABS(L2-L3),ABS(M1))
       L1MAX = L2 + L3
 C
+C***THIS IS NOW DONE IN THE C++ INTERFACE
 C  Check error condition 3.
 C      IF(MOD(L1MAX-L1MIN+EPS,ONE).GE.EPS+EPS)THEN
 C         IER=3
@@ -188,6 +190,7 @@ C      ENDIF
       IF(L1MIN.LT.L1MAX-EPS)   GO TO 20
       IF(L1MIN.LT.L1MAX+EPS)   GO TO 10
 C
+C***THIS IS NOW DONE IN THE C++ INTERFACE
 C  Check error condition 4.
 C      IER=4
 C      CALL XERMSG('SLATEC','DRC3JJ','L1MIN greater than L1MAX.',IER,1)
@@ -210,6 +213,7 @@ C     LSCALE = 0
       NFIN = INT(L1MAX-L1MIN+ONE+EPS)
 C      IF(NDIM-NFIN)  21, 23, 23
 C
+C***THIS IS NOW DONE IN THE C++ INTERFACE
 C  Check error condition 5.
 C   21 IER = 5
 C      CALL XERMSG('SLATEC','DRC3JJ','Dimension of result array for '//
@@ -450,6 +454,7 @@ C             RACAH COEFFICIENTS, VECTOR ADDITION COEFFICIENTS,
 C             WIGNER COEFFICIENTS
 C***AUTHOR  Gordon, R. G., Harvard University
 C           Schulten, K., Max Planck Institute
+C***MODIFIED BY J. Dumont, Université Laval
 C***DESCRIPTION
 C
 C *Usage:
@@ -579,7 +584,7 @@ C***FIRST EXECUTABLE STATEMENT  DRC6J
       IER=0
 C  HUGE is the square root of one twentieth of the largest floating
 C  point number, approximately.
-      HVAL = SQRT(HUGE(1.D0)/20.0D0)
+      HVAL = HUGE(1.D0)
       SRHUGE = SQRT(HVAL)
       TINY = 1.0D0/HVAL
       SRTINY = 1.0D0/SRHUGE
