@@ -5,10 +5,10 @@
  * https://www.gnu.org/licenses/lgpl.html.              -/
  ********************************************************/ 
 
-#ifndef WIGNER_SYMBOLS_H
-#define WIGNER_SYMBOLS_H
+#ifndef WIGNER_SYMBOLS_CPP_H
+#define WIGNER_SYMBOLS_CPP_H
 
-/** \file wignerSymbols.h  
+/** \file wignerSymbols-cpp.h  
  *
  * 	\author Joey Dumont <joey.dumont@gmail.com>
  *
@@ -72,10 +72,6 @@ inline double clebschGordan(double l1, double l2, double l3,
 	// We simply compute it via the 3j symbol. 
 	return (pow(-1.0,l1-l2+m3)*sqrt(2.0*l3+1.0)*wigner3j(l1,l2,l3,m1,m2,-m3));
 }
-
-template <typename T> double sgn(T val) {
-    return (T(0) < val) - (val < T(0));
-}
 }
 
-#endif  // WIGNER_SYMBOLS_H
+#endif  // WIGNER_SYMBOLS_CPP_H

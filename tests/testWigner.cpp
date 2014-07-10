@@ -116,7 +116,8 @@ int main(int argc, char* argv[])
 	{
 		std::cout << std::setprecision(10) << std::scientific <<  *it << std::endl;
 	}
-	std::cout << WignerSymbols::wigner6j(11,16,14,13,15,15) << std::endl;
+	std::cout << WignerSymbols::wigner6j(450,500,510,520,510,510) << std::endl;
+	std::cout << WignerSymbols::wigner6j_f(450,500,510,520,510,510) << std::endl;
 
 	return 0;
 }
