@@ -210,6 +210,35 @@ double wigner3j(double l1, double l2, double l3,
 
 	if (!select) return 0.0;
 
+	// Temp fix of gh-issue-1.
+	// We permute the indices such that the largest of the 
+	// three is in first position.
+	switch (maxThree(l1, l2, l3))
+	{
+		case 1:
+		{
+			break;
+		}
+
+		case 2:
+		{
+			std::swap(l1, l2);
+			std::swap(l2, l3);
+			std::swap(m1, m2);
+			std::swap(m2, m3);
+			break;
+		}
+
+		case 3:
+		{
+			std::swap(l1, l3);
+			std::swap(l2, l3);
+			std::swap(m1, m3);
+			std::swap(m2, m3);
+			break;
+		}
+	}
+
 	// We compute l1min and the position of the array we will want.
 	double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
 

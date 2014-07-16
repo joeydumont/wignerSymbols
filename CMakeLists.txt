@@ -19,7 +19,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 aux_source_directory(./src SRC_LIST)
 
 # Build a shared library
-add_library(${PROJECT_NAME} SHARED ${SRC_LIST} "./src/wignerSymbols-fortran.f" "./src/wignerSymbols-fortran-c-binding.f90" )
+add_library(${PROJECT_NAME} SHARED 
+    ${SRC_LIST} 
+    "./src/wignerSymbols-fortran.f"
+    "./src/wignerSymbols-fortran-c-binding.f90" )
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME}
     PROPERTIES

@@ -10,5 +10,6 @@
 
 #include "wignerSymbols/wignerSymbols-cpp.h"
 #include "wignerSymbols/wignerSymbols-fortran.h"
+#include "wignerSymbols/commonFunctions.h"
 
 #endif  // WIGNER_SYMBOLS_H

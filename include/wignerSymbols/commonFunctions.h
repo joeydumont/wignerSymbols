@@ -19,7 +19,34 @@
  */
 
 namespace WignerSymbols {
-template <typename T> double sgn(T val) {
+template <typename T> 
+double sgn(T val) 
+{
     return (T(0) < val) - (val < T(0));
+}
+
+template <typename T>
+int maxThree(T a, T b, T c)
+{
+    int maxIndex;
+    T max;
+    if (a > b)
+    {
+        max = a;
+        maxIndex = 1;
+    }
+    else 
+    {
+        max = b;
+        maxIndex = 2;
+    }
+
+    if (max < c) 
+    {
+        max = c;
+        maxIndex = 3;
+    }
+
+    return maxIndex;
 }
 }
