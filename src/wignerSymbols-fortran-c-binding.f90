@@ -5,7 +5,6 @@
 ! https://www.gnu.org/licenses/lgpl.html.              -/
 ! ******************************************************/ 
 
-
 ! ----------------------------------------------------------------
 ! - Author:       Joey Dumont <joey.dumont@gmail.com>            -
 ! - Date created: 2013-08-15                                     -

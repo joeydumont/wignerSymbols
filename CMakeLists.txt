@@ -22,6 +22,15 @@ aux_source_directory(./src SRC_LIST)
 add_library(${PROJECT_NAME} SHARED 
     ${SRC_LIST} 
     "./src/wignerSymbols-fortran.f"
+    "./src/machine.for"
+    "./src/fdump.f"
+    "./src/j4save.f"
+    "./src/xercnt.f"
+    "./src/xerhlt.f"
+    "./src/xermsg.f"
+    "./src/xerprn.f"
+    "./src/xersve.f"
+    "./src/xgetua.f"
     "./src/wignerSymbols-fortran-c-binding.f90" )
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME}

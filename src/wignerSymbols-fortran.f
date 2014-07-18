@@ -5,7 +5,6 @@ C distributed with this file, you can obtain one at    -/
 C https://www.gnu.org/licenses/lgpl.html.              -/
 C ******************************************************/ 
 
-
 *DECK DRC3JJ
       SUBROUTINE DRC3JJ (L2, L3, M2, M3, L1MIN, L1MAX, THRCOF, NDIM,
      +   IER)
@@ -22,7 +21,6 @@ C             RACAH COEFFICIENTS, VECTOR ADDITION COEFFICIENTS,
 C             WIGNER COEFFICIENTS
 C***AUTHOR  Gordon, R. G., Harvard University
 C           Schulten, K., Max Planck Institute
-C***MODIFIED BY J. Dumont, Université Laval
 C***DESCRIPTION
 C
 C *Usage:
@@ -112,7 +110,7 @@ C                  pp. 1971-1988.
 C               5. Schulten, Klaus and Gordon, Roy G., Recursive
 C                  evaluation of 3j and 6j coefficients, Computer
 C                  Phys Comm, v 11, 1976, pp. 269-278.
-C***ROUTINES CALLED  XERMSG
+C***ROUTINES CALLED  D1MACH, XERMSG
 C***REVISION HISTORY  (YYMMDD)
 C   750101  DATE WRITTEN
 C   880515  SLATEC prologue added by G. C. Nielson, NBS; parameters
@@ -138,7 +136,7 @@ C
 C
       INTEGER I, INDEX, LSTEP, N, NFIN, NFINP1, NFINP2, NFINP3, NLIM,
      +        NSTEP2
-      DOUBLE PRECISION A1, A1S, A2, A2S, C1, C1OLD, C2, CNORM, HVAL, D1MACH,
+      DOUBLE PRECISION A1, A1S, A2, A2S, C1, C1OLD, C2, CNORM, D1MACH,
      +                 DENOM, DV, EPS, HUGE, L1, M1, NEWFAC, OLDFAC,
      +                 ONE, RATIO, SIGN1, SIGN2, SRHUGE, SRTINY, SUM1,
      +                 SUM2, SUMBAC, SUMFOR, SUMUNI, THREE, THRESH,
@@ -150,28 +148,28 @@ C***FIRST EXECUTABLE STATEMENT  DRC3JJ
       IER=0
 C  HUGE is the square root of one twentieth of the largest floating
 C  point number, approximately.
-      HVAL = HUGE(1.D0)
-      SRHUGE = SQRT(HVAL)
-      TINY = 1.0D0/HVAL
+      HUGE = SQRT(D1MACH(2)/20.0D0)
+      SRHUGE = SQRT(HUGE)
+      TINY = 1.0D0/HUGE
       SRTINY = 1.0D0/SRHUGE
 C
 C     LMATCH = ZERO
       M1 = - M2 - M3
-C***THIS IS NOW DONE IN THE C++ INTERFACE
+C
 C  Check error conditions 1 and 2.
-C      IF((L2-ABS(M2)+EPS.LT.ZERO).OR.
-C     +   (L3-ABS(M3)+EPS.LT.ZERO))THEN
-C         IER=1
-C         CALL XERMSG('SLATEC','DRC3JJ','L2-ABS(M2) or L3-ABS(M3) '//
-C     +      'less than zero.',IER,1)
-C         RETURN
-C      ELSEIF((MOD(L2+ABS(M2)+EPS,ONE).GE.EPS+EPS).OR.
-C     +   (MOD(L3+ABS(M3)+EPS,ONE).GE.EPS+EPS))THEN
-C         IER=2
-C         CALL XERMSG('SLATEC','DRC3JJ','L2+ABS(M2) or L3+ABS(M3) '//
-C     +      'not integer.',IER,1)
-C         RETURN
-C      ENDIF
+      IF((L2-ABS(M2)+EPS.LT.ZERO).OR.
+     +   (L3-ABS(M3)+EPS.LT.ZERO))THEN
+         IER=1
+         CALL XERMSG('SLATEC','DRC3JJ','L2-ABS(M2) or L3-ABS(M3) '//
+     +      'less than zero.',IER,1)
+         RETURN
+      ELSEIF((MOD(L2+ABS(M2)+EPS,ONE).GE.EPS+EPS).OR.
+     +   (MOD(L3+ABS(M3)+EPS,ONE).GE.EPS+EPS))THEN
+         IER=2
+         CALL XERMSG('SLATEC','DRC3JJ','L2+ABS(M2) or L3+ABS(M3) '//
+     +      'not integer.',IER,1)
+         RETURN
+      ENDIF
 C
 C
 C
@@ -180,26 +178,24 @@ C
       L1MIN = MAX(ABS(L2-L3),ABS(M1))
       L1MAX = L2 + L3
 C
-C***THIS IS NOW DONE IN THE C++ INTERFACE
 C  Check error condition 3.
-C      IF(MOD(L1MAX-L1MIN+EPS,ONE).GE.EPS+EPS)THEN
-C         IER=3
-C         CALL XERMSG('SLATEC','DRC3JJ','L1MAX-L1MIN not integer.',IER,1)
-C         RETURN
-C      ENDIF
+      IF(MOD(L1MAX-L1MIN+EPS,ONE).GE.EPS+EPS)THEN
+         IER=3
+         CALL XERMSG('SLATEC','DRC3JJ','L1MAX-L1MIN not integer.',IER,1)
+         RETURN
+      ENDIF
       IF(L1MIN.LT.L1MAX-EPS)   GO TO 20
       IF(L1MIN.LT.L1MAX+EPS)   GO TO 10
 C
-C***THIS IS NOW DONE IN THE C++ INTERFACE
 C  Check error condition 4.
-C      IER=4
-C      CALL XERMSG('SLATEC','DRC3JJ','L1MIN greater than L1MAX.',IER,1)
-C      RETURN
+      IER=4
+      CALL XERMSG('SLATEC','DRC3JJ','L1MIN greater than L1MAX.',IER,1)
+      RETURN
 C
 C  This is reached in case that L1 can take only one value,
 C  i.e. L1MIN = L1MAX
 C
- 10    CONTINUE
+   10 CONTINUE
 C     LSCALE = 0
       THRCOF(1) = (-ONE) ** INT(ABS(L2+M2-L3+M3)+EPS) /
      1 SQRT(L1MIN + L2 + L3 + ONE)
@@ -208,22 +204,21 @@ C
 C  This is reached in case that L1 takes more than one value,
 C  i.e. L1MIN < L1MAX.
 C
- 20    CONTINUE
+   20 CONTINUE
 C     LSCALE = 0
       NFIN = INT(L1MAX-L1MIN+ONE+EPS)
-C      IF(NDIM-NFIN)  21, 23, 23
+      IF(NDIM-NFIN)  21, 23, 23
 C
-C***THIS IS NOW DONE IN THE C++ INTERFACE
 C  Check error condition 5.
-C   21 IER = 5
-C      CALL XERMSG('SLATEC','DRC3JJ','Dimension of result array for '//
-C     +            '3j coefficients too small.',IER,1)
-C      RETURN
+   21 IER = 5
+      CALL XERMSG('SLATEC','DRC3JJ','Dimension of result array for '//
+     +            '3j coefficients too small.',IER,1)
+      RETURN
 C
 C
 C  Starting forward recursion from L1MIN taking NSTEP1 steps
 C
- 23    L1 = L1MIN
+   23 L1 = L1MIN
       NEWFAC = 0.0D0
       C1 = 0.0D0
       THRCOF(1) = SRTINY
@@ -231,7 +226,7 @@ C
 C
 C
       LSTEP = 1
- 30    LSTEP = LSTEP + 1
+   30 LSTEP = LSTEP + 1
       L1 = L1 + ONE
 C
 C
@@ -247,15 +242,15 @@ C
 C
       IF(LSTEP-2)  32, 32, 31
 C
- 31    C1OLD = ABS(C1)
- 32     C1 = - (L1+L1-ONE) * DV / DENOM
+   31 C1OLD = ABS(C1)
+   32 C1 = - (L1+L1-ONE) * DV / DENOM
       GO TO 50
 C
 C  If L1 = 1, (L1-1) has to be factored out of DV, hence
 C
- 40    C1 = - (L1+L1-ONE) * L1 * (M3-M2) / NEWFAC
+   40 C1 = - (L1+L1-ONE) * L1 * (M3-M2) / NEWFAC
 C
- 50     IF(LSTEP.GT.2)   GO TO 60
+   50 IF(LSTEP.GT.2)   GO TO 60
 C
 C
 C  If L1 = L1MIN + 1, the third term in the recursion equation vanishes,
@@ -267,7 +262,7 @@ C  hence
       GO TO 30
 C
 C
- 60    C2 = - L1 * OLDFAC / DENOM
+   60 C2 = - L1 * OLDFAC / DENOM
 C
 C  Recursion to the next 3j coefficient X
 C
@@ -288,9 +283,9 @@ C
 C     LSCALE = LSCALE + 1
       DO 70 I=1,LSTEP
       IF(ABS(THRCOF(I)).LT.SRTINY)   THRCOF(I) = ZERO
- 70    THRCOF(I) = THRCOF(I) / SRHUGE
-      SUM1 = SUM1 / HVAL
-      SUMFOR = SUMFOR / HVAL
+   70 THRCOF(I) = THRCOF(I) / SRHUGE
+      SUM1 = SUM1 / HUGE
+      SUMFOR = SUMFOR / HUGE
       X = X / SRHUGE
 C
 C  As long as ABS(C1) is decreasing, the recursion proceeds towards
@@ -298,13 +293,13 @@ C  increasing 3j values and, hence, is numerically stable.  Once
 C  an increase of ABS(C1) is detected, the recursion direction is
 C  reversed.
 C
- 80    IF(C1OLD-ABS(C1))   100, 100, 30
+   80 IF(C1OLD-ABS(C1))   100, 100, 30
 C
 C
 C  Keep three 3j coefficients around LMATCH for comparison with
 C  backward recursion.
 C
- 100    CONTINUE
+  100 CONTINUE
 C     LMATCH = L1 - 1
       X1 = X
       X2 = THRCOF(LSTEP-1)
@@ -324,10 +319,10 @@ C
       L1 = L1MAX
       THRCOF(NFIN) = SRTINY
       SUM2 = TINY * (L1+L1+ONE)
-C374302493
+C
       L1 = L1 + TWO
       LSTEP = 1
- 110   LSTEP = LSTEP + 1
+  110 LSTEP = LSTEP + 1
       L1 = L1 - ONE
 C
       OLDFAC = NEWFAC
@@ -351,7 +346,7 @@ C
       GO TO 110
 C
 C
- 120   C2 = - (L1 - ONE) * OLDFAC / DENOM
+  120 C2 = - (L1 - ONE) * OLDFAC / DENOM
 C
 C  Recursion to the next 3j coefficient Y
 C
@@ -375,9 +370,9 @@ C     LSCALE = LSCALE + 1
       DO 130 I=1,LSTEP
       INDEX = NFIN - I + 1
       IF(ABS(THRCOF(INDEX)).LT.SRTINY)   THRCOF(INDEX) = ZERO
- 130   THRCOF(INDEX) = THRCOF(INDEX) / SRHUGE
-      SUM2 = SUM2 / HVAL
-      SUMBAC = SUMBAC / HVAL
+  130 THRCOF(INDEX) = THRCOF(INDEX) / SRHUGE
+      SUM2 = SUM2 / HUGE
+      SUMBAC = SUMBAC / HUGE
 C
 C
       GO TO 110
@@ -386,7 +381,7 @@ C
 C  The forward recursion 3j coefficients X1, X2, X3 are to be matched
 C  with the corresponding backward recursion values Y1, Y2, Y3.
 C
- 200   Y3 = Y
+  200 Y3 = Y
       Y2 = THRCOF(NFINP2-LSTEP)
       Y1 = THRCOF(NFINP3-LSTEP)
 C
@@ -400,44 +395,45 @@ C
       IF(ABS(RATIO).LT.ONE)   GO TO 211
 C
       DO 210 N=1,NLIM
- 210      THRCOF(N) = RATIO * THRCOF(N)
+  210 THRCOF(N) = RATIO * THRCOF(N)
       SUMUNI = RATIO * RATIO * SUMFOR + SUMBAC
       GO TO 230
 C
- 211   NLIM = NLIM + 1
+  211 NLIM = NLIM + 1
       RATIO = ONE / RATIO
       DO 212 N=NLIM,NFIN
- 212      THRCOF(N) = RATIO * THRCOF(N)
+  212 THRCOF(N) = RATIO * THRCOF(N)
       SUMUNI = SUMFOR + RATIO*RATIO*SUMBAC
       GO TO 230
 C
- 220   SUMUNI = SUM1
+  220 SUMUNI = SUM1
 C
 C
 C  Normalize 3j coefficients
 C
- 230    CNORM = ONE / SQRT(SUMUNI)
+  230 CNORM = ONE / SQRT(SUMUNI)
 C
 C  Sign convention for last 3j coefficient determines overall phase
 C
       SIGN1 = SIGN(ONE,THRCOF(NFIN))
       SIGN2 = (-ONE) ** INT(ABS(L2+M2-L3+M3)+EPS)
       IF(SIGN1*SIGN2) 235,235,236
- 235   CNORM = - CNORM
+  235 CNORM = - CNORM
 C
- 236    IF(ABS(CNORM).LT.ONE)   GO TO 250
+  236 IF(ABS(CNORM).LT.ONE)   GO TO 250
 C
       DO 240 N=1,NFIN
- 240      THRCOF(N) = CNORM * THRCOF(N)
+  240 THRCOF(N) = CNORM * THRCOF(N)
       RETURN
 C
- 250   THRESH = TINY / ABS(CNORM)
+  250 THRESH = TINY / ABS(CNORM)
       DO 251 N=1,NFIN
       IF(ABS(THRCOF(N)).LT.THRESH)   THRCOF(N) = ZERO
- 251   THRCOF(N) = CNORM * THRCOF(N)
+  251 THRCOF(N) = CNORM * THRCOF(N)
 C
       RETURN
       END
+
 *DECK DRC6J
       SUBROUTINE DRC6J (L2, L3, L4, L5, L6, L1MIN, L1MAX, SIXCOF, NDIM,
      +   IER)
@@ -454,7 +450,6 @@ C             RACAH COEFFICIENTS, VECTOR ADDITION COEFFICIENTS,
 C             WIGNER COEFFICIENTS
 C***AUTHOR  Gordon, R. G., Harvard University
 C           Schulten, K., Max Planck Institute
-C***MODIFIED BY J. Dumont, Université Laval
 C***DESCRIPTION
 C
 C *Usage:
@@ -546,7 +541,7 @@ C                  pp. 1971-1988.
 C               4. Schulten, Klaus and Gordon, Roy G., Recursive
 C                  evaluation of 3j and 6j coefficients, Computer
 C                  Phys Comm, v 11, 1976, pp. 269-278.
-C***ROUTINES CALLED  XERMSG
+C***ROUTINES CALLED  D1MACH, XERMSG
 C***REVISION HISTORY  (YYMMDD)
 C   750101  DATE WRITTEN
 C   880515  SLATEC prologue added by G. C. Nielson, NBS; parameters
@@ -572,7 +567,7 @@ C
 C
       INTEGER I, INDEX, LSTEP, N, NFIN, NFINP1, NFINP2, NFINP3, NLIM,
      +        NSTEP2
-      DOUBLE PRECISION A1, A1S, A2, A2S, C1, C1OLD, C2, CNORM, HVAL, D1MACH,
+      DOUBLE PRECISION A1, A1S, A2, A2S, C1, C1OLD, C2, CNORM, D1MACH,
      +                 DENOM, DV, EPS, HUGE, L1, NEWFAC, OLDFAC, ONE,
      +                 RATIO, SIGN1, SIGN2, SRHUGE, SRTINY, SUM1, SUM2,
      +                 SUMBAC, SUMFOR, SUMUNI, THREE, THRESH, TINY, TWO,
@@ -584,33 +579,33 @@ C***FIRST EXECUTABLE STATEMENT  DRC6J
       IER=0
 C  HUGE is the square root of one twentieth of the largest floating
 C  point number, approximately.
-      HVAL = HUGE(1.D0)
-      SRHUGE = SQRT(HVAL)
-      TINY = 1.0D0/HVAL
+      HUGE = SQRT(D1MACH(2)/20.0D0)
+      SRHUGE = SQRT(HUGE)
+      TINY = 1.0D0/HUGE
       SRTINY = 1.0D0/SRHUGE
 C
 C     LMATCH = ZERO
 C
 C  Check error conditions 1, 2, and 3.
-C      IF((MOD(L2+L3+L5+L6+EPS,ONE).GE.EPS+EPS).OR.
-C     +   (MOD(L4+L2+L6+EPS,ONE).GE.EPS+EPS))THEN
-C         IER=1
-C         CALL XERMSG('SLATEC','DRC6J','L2+L3+L5+L6 or L4+L2+L6 not '//
-C     +      'integer.',IER,1)
-C         RETURN
-C      ELSEIF((L4+L2-L6.LT.ZERO).OR.(L4-L2+L6.LT.ZERO).OR.
-C     +   (-L4+L2+L6.LT.ZERO))THEN
-C         IER=2
-C         CALL XERMSG('SLATEC','DRC6J','L4, L2, L6 triangular '//
-C     +      'condition not satisfied.',IER,1)
-C         RETURN
-C      ELSEIF((L4-L5+L3.LT.ZERO).OR.(L4+L5-L3.LT.ZERO).OR.
-C     +   (-L4+L5+L3.LT.ZERO))THEN
-C         IER=3
-C         CALL XERMSG('SLATEC','DRC6J','L4, L5, L3 triangular '//
-C     +      'condition not satisfied.',IER,1)
-C         RETURN
-C      ENDIF
+      IF((MOD(L2+L3+L5+L6+EPS,ONE).GE.EPS+EPS).OR.
+     +   (MOD(L4+L2+L6+EPS,ONE).GE.EPS+EPS))THEN
+         IER=1
+         CALL XERMSG('SLATEC','DRC6J','L2+L3+L5+L6 or L4+L2+L6 not '//
+     +      'integer.',IER,1)
+         RETURN
+      ELSEIF((L4+L2-L6.LT.ZERO).OR.(L4-L2+L6.LT.ZERO).OR.
+     +   (-L4+L2+L6.LT.ZERO))THEN
+         IER=2
+         CALL XERMSG('SLATEC','DRC6J','L4, L2, L6 triangular '//
+     +      'condition not satisfied.',IER,1)
+         RETURN
+      ELSEIF((L4-L5+L3.LT.ZERO).OR.(L4+L5-L3.LT.ZERO).OR.
+     +   (-L4+L5+L3.LT.ZERO))THEN
+         IER=3
+         CALL XERMSG('SLATEC','DRC6J','L4, L5, L3 triangular '//
+     +      'condition not satisfied.',IER,1)
+         RETURN
+      ENDIF
 C
 C  Limits for L1
 C
@@ -618,23 +613,23 @@ C
       L1MAX = MIN(L2+L3,L5+L6)
 C
 C  Check error condition 4.
-C      IF(MOD(L1MAX-L1MIN+EPS,ONE).GE.EPS+EPS)THEN
-C         IER=4
-C         CALL XERMSG('SLATEC','DRC6J','L1MAX-L1MIN not integer.',IER,1)
-C         RETURN
-C      ENDIF
+      IF(MOD(L1MAX-L1MIN+EPS,ONE).GE.EPS+EPS)THEN
+         IER=4
+         CALL XERMSG('SLATEC','DRC6J','L1MAX-L1MIN not integer.',IER,1)
+         RETURN
+      ENDIF
       IF(L1MIN.LT.L1MAX-EPS)   GO TO 20
       IF(L1MIN.LT.L1MAX+EPS)   GO TO 10
 C
 C  Check error condition 5.
-C      IER=5
-C      CALL XERMSG('SLATEC','DRC6J','L1MIN greater than L1MAX.',IER,1)
-C      RETURN
+      IER=5
+      CALL XERMSG('SLATEC','DRC6J','L1MIN greater than L1MAX.',IER,1)
+      RETURN
 C
 C
 C  This is reached in case that L1 can take only one value
 C
- 10    CONTINUE
+   10 CONTINUE
 C     LSCALE = 0
       SIXCOF(1) = (-ONE) ** INT(L2+L3+L5+L6+EPS) /
      1            SQRT((L1MIN+L1MIN+ONE)*(L4+L4+ONE))
@@ -643,28 +638,28 @@ C
 C
 C  This is reached in case that L1 can take more than one value.
 C
- 20    CONTINUE
+   20 CONTINUE
 C     LSCALE = 0
       NFIN = INT(L1MAX-L1MIN+ONE+EPS)
-C      IF(NDIM-NFIN)   21, 23, 23
+      IF(NDIM-NFIN)   21, 23, 23
 C
 C  Check error condition 6.
-C   21 IER = 6
-C      CALL XERMSG('SLATEC','DRC6J','Dimension of result array for 6j '//
-C     +            'coefficients too small.',IER,1)
-C      RETURN
+   21 IER = 6
+      CALL XERMSG('SLATEC','DRC6J','Dimension of result array for 6j '//
+     +            'coefficients too small.',IER,1)
+      RETURN
 C
 C
 C  Start of forward recursion
 C
- 23    L1 = L1MIN
+   23 L1 = L1MIN
       NEWFAC = 0.0D0
       C1 = 0.0D0
       SIXCOF(1) = SRTINY
       SUM1 = (L1+L1+ONE) * TINY
 C
       LSTEP = 1
- 30    LSTEP = LSTEP + 1
+   30 LSTEP = LSTEP + 1
       L1 = L1 + ONE
 C
       OLDFAC = NEWFAC
@@ -683,16 +678,16 @@ C
 C
       IF(LSTEP-2)  32, 32, 31
 C
- 31    C1OLD = ABS(C1)
- 32     C1 = - (L1+L1-ONE) * DV / DENOM
+   31 C1OLD = ABS(C1)
+   32 C1 = - (L1+L1-ONE) * DV / DENOM
       GO TO 50
 C
 C  If L1 = 1, (L1 - 1) has to be factored out of DV, hence
 C
- 40    C1 = - TWO * ( L2*(L2+ONE) + L5*(L5+ONE) - L4*(L4+ONE) )
+   40 C1 = - TWO * ( L2*(L2+ONE) + L5*(L5+ONE) - L4*(L4+ONE) )
      1 / NEWFAC
 C
- 50     IF(LSTEP.GT.2)   GO TO 60
+   50 IF(LSTEP.GT.2)   GO TO 60
 C
 C  If L1 = L1MIN + 1, the third term in recursion equation vanishes
 C
@@ -704,7 +699,7 @@ C
       GO TO 30
 C
 C
- 60    C2 = - L1 * OLDFAC / DENOM
+   60 C2 = - L1 * OLDFAC / DENOM
 C
 C  Recursion to the next 6j coefficient X
 C
@@ -726,9 +721,9 @@ C
 C     LSCALE = LSCALE + 1
       DO 70 I=1,LSTEP
       IF(ABS(SIXCOF(I)).LT.SRTINY)   SIXCOF(I) = ZERO
- 70    SIXCOF(I) = SIXCOF(I) / SRHUGE
-      SUM1 = SUM1 / HVAL
-      SUMFOR = SUMFOR / HVAL
+   70 SIXCOF(I) = SIXCOF(I) / SRHUGE
+      SUM1 = SUM1 / HUGE
+      SUMFOR = SUMFOR / HUGE
       X = X / SRHUGE
 C
 C
@@ -737,13 +732,13 @@ C  proceeds towards increasing 6j values and, hence, is numerically
 C  stable.  Once an increase of ABS(C1) is detected, the recursion
 C  direction is reversed.
 C
- 80    IF(C1OLD-ABS(C1))   100, 100, 30
+   80 IF(C1OLD-ABS(C1))   100, 100, 30
 C
 C
 C  Keep three 6j coefficients around LMATCH for comparison later
 C  with backward recursion.
 C
- 100    CONTINUE
+  100 CONTINUE
 C     LMATCH = L1 - 1
       X1 = X
       X2 = SIXCOF(LSTEP-1)
@@ -767,7 +762,7 @@ C
 C
       L1 = L1 + TWO
       LSTEP = 1
- 110   LSTEP = LSTEP + 1
+  110 LSTEP = LSTEP + 1
       L1 = L1 - ONE
 C
       OLDFAC = NEWFAC
@@ -794,7 +789,7 @@ C
       GO TO 110
 C
 C
- 120   C2 = - (L1-ONE) * OLDFAC / DENOM
+  120 C2 = - (L1-ONE) * OLDFAC / DENOM
 C
 C  Recursion to the next 6j coefficient Y
 C
@@ -816,9 +811,9 @@ C     LSCALE = LSCALE + 1
       DO 130 I=1,LSTEP
       INDEX = NFIN-I+1
       IF(ABS(SIXCOF(INDEX)).LT.SRTINY)   SIXCOF(INDEX) = ZERO
- 130   SIXCOF(INDEX) = SIXCOF(INDEX) / SRHUGE
-      SUMBAC = SUMBAC / HVAL
-      SUM2 = SUM2 / HVAL
+  130 SIXCOF(INDEX) = SIXCOF(INDEX) / SRHUGE
+      SUMBAC = SUMBAC / HUGE
+      SUM2 = SUM2 / HUGE
 C
       GO TO 110
 C
@@ -826,7 +821,7 @@ C
 C  The forward recursion 6j coefficients X1, X2, X3 are to be matched
 C  with the corresponding backward recursion values Y1, Y2, Y3.
 C
- 200   Y3 = Y
+  200 Y3 = Y
       Y2 = SIXCOF(NFINP2-LSTEP)
       Y1 = SIXCOF(NFINP3-LSTEP)
 C
@@ -840,41 +835,41 @@ C
       IF(ABS(RATIO).LT.ONE)   GO TO 211
 C
       DO 210 N=1,NLIM
- 210      SIXCOF(N) = RATIO * SIXCOF(N)
+  210 SIXCOF(N) = RATIO * SIXCOF(N)
       SUMUNI = RATIO * RATIO * SUMFOR + SUMBAC
       GO TO 230
 C
- 211   NLIM = NLIM + 1
+  211 NLIM = NLIM + 1
       RATIO = ONE / RATIO
       DO 212 N=NLIM,NFIN
- 212      SIXCOF(N) = RATIO * SIXCOF(N)
+  212 SIXCOF(N) = RATIO * SIXCOF(N)
       SUMUNI = SUMFOR + RATIO*RATIO*SUMBAC
       GO TO 230
 C
- 220   SUMUNI = SUM1
+  220 SUMUNI = SUM1
 C
 C
 C  Normalize 6j coefficients
 C
- 230    CNORM = ONE / SQRT((L4+L4+ONE)*SUMUNI)
+  230 CNORM = ONE / SQRT((L4+L4+ONE)*SUMUNI)
 C
 C  Sign convention for last 6j coefficient determines overall phase
 C
       SIGN1 = SIGN(ONE,SIXCOF(NFIN))
       SIGN2 = (-ONE) ** INT(L2+L3+L5+L6+EPS)
       IF(SIGN1*SIGN2) 235,235,236
- 235   CNORM = - CNORM
+  235 CNORM = - CNORM
 C
- 236    IF(ABS(CNORM).LT.ONE)   GO TO 250
+  236 IF(ABS(CNORM).LT.ONE)   GO TO 250
 C
       DO 240 N=1,NFIN
- 240      SIXCOF(N) = CNORM * SIXCOF(N)
+  240 SIXCOF(N) = CNORM * SIXCOF(N)
       RETURN
 C
- 250   THRESH = TINY / ABS(CNORM)
+  250 THRESH = TINY / ABS(CNORM)
       DO 251 N=1,NFIN
       IF(ABS(SIXCOF(N)).LT.THRESH)   SIXCOF(N) = ZERO
- 251   SIXCOF(N) = CNORM * SIXCOF(N)
+  251 SIXCOF(N) = CNORM * SIXCOF(N)
 C
       RETURN
       END
