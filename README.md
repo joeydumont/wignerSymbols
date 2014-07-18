@@ -24,7 +24,13 @@ cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local && make && sudo make install.
 
 ## API documentation
 We list the user-facing functions that compute the Wigner symbols. The functions are
-behind the namespace `WignerSymbols`.
+behind the namespace `WignerSymbols`. Both the C++ implementation (my own) and the
+original Fortran implementation (by Schulten and Gordon) are provided by this package.
+In my own tests, I had found that the original Fortran implementation provided only 
+`single` precision. This might be compiler-dependent, so you might have better luck. 
+The Fortran version is also somewhat faster (10% faster, approximately). In any case, 
+this program provides either a complete C++ replacement, or a C++ interface to the 
+evaluation of Wigner symbols. 
 
 ### C++ implementation
 
