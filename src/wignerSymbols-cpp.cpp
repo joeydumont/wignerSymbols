@@ -13,7 +13,7 @@ std::vector<double> wigner3j(double l2, double l3,
 			     double m1, double m2, double m3)
 {
 	// We compute the numeric limits of double precision. 
-	double huge = std::numeric_limits<double>::max();
+	double huge = sqrt(std::numeric_limits<double>::max()/20.0);
 	double srhuge = sqrt(huge);
 	double tiny = std::numeric_limits<double>::min();
 	double srtiny = sqrt(tiny);
@@ -103,8 +103,9 @@ std::vector<double> wigner3j(double l2, double l3,
 					std::cout << "We renormalized the forward recursion." << std::endl;
 					for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.begin()+i; ++it)
 					{
-						if (std::fabs(*it) < srtiny) *it = 0;
-						else *it /= srhuge;
+						//if (std::fabs(*it) < srtiny) *it = 0;
+						//else 
+						*it /= srhuge;
 					}
 				}
 	
@@ -160,8 +161,9 @@ std::vector<double> wigner3j(double l2, double l3,
 						std::cout << "We renormalized the backward recursion." << std::endl;
 						for (std::vector<double>::iterator it = thrcof.begin()+j; it != thrcof.end(); ++it)
 						{
-							if (std::fabs(*it) < srtiny) *it = 0;
-							else *it /= srhuge;
+							//if (std::fabs(*it) < srtiny) *it = 0;
+							//else 
+							*it /= srhuge;
 						}
 					}
 			
@@ -186,12 +188,16 @@ std::vector<double> wigner3j(double l2, double l3,
 	{
 		sum += (2.0*(l1min+k)+1.0)*thrcof[k]*thrcof[k];
 	}
+	std::cout << sum << std::endl;
 
-	double c1 = pow(-1.0,l2-l3-m1)*sgn(thrcof[size-1])/sqrt(sum);
-
+	std::cout << "(-1)^(l2-l3-m1): " << pow(-1.0,l2-l3-m1) << " sgn:" << sgn(thrcof[size-1]) << std::endl;
+	double c1 = pow(-1.0,l2-l3-m1)*sgn(thrcof[size-1]);
+	std::cout << "c1: " << c1 << std::endl;
 	for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.end(); ++it)
 	{
-		*it *= c1;
+		std::cout << *it << ", " << c1 << ", ";
+		*it *= c1/sqrt(sum);
+		std::cout << *it << std::endl;
 	}
 	return thrcof;
 }

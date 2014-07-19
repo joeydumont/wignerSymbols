@@ -134,8 +134,8 @@ double firstOrthoRelation3j(double l1, double l2, double l3, double m3)
 	{
 		for (int j=0;j<m2Size;j++)
 		{
-			sum += (2.0*l3+1.0)*WignerSymbols::wigner3j(l1,l2,l3,((double)(-l1+i)),((double)(-l2+j)),m3)
-				*WignerSymbols::wigner3j(l1,l2,l3,((double)(-l1+i)),((double)(-l2+j)),m3);
+			sum += (2.0*l3+1.0)*WignerSymbols::wigner3j_f(l1,l2,l3,((double)(-l1+i)),((double)(-l2+j)),m3)
+				*WignerSymbols::wigner3j_f(l1,l2,l3,((double)(-l1+i)),((double)(-l2+j)),m3);
 		}
 	}
 

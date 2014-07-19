@@ -37,7 +37,6 @@ int main (int argc, char* argv[])
   double test31 = WignerSymbols::wigner3j(772, 874, 1231, 442, 756, -1198);
   double test32 = WignerSymbols::wigner3j(874, 1231, 772, 756, -1198, 442);
   double test33 = WignerSymbols::wigner3j(1231, 772, 874, -1198, 442, 756);
-
   double test34 = WignerSymbols::wigner3j_f(772, 874, 1231, 442, 756, -1198);
   double test35 = WignerSymbols::wigner3j_f(874, 1231, 772, 756, -1198, 442);
   double test36 = WignerSymbols::wigner3j_f(1231, 772, 874, -1198, 442, 756);
@@ -59,6 +58,12 @@ int main (int argc, char* argv[])
   std::cout << "FOR impl.: " << test24 << ", " << test25 << ", " << test26 << std::endl;
   std::cout << "C++ impl.: " << test31 << ", " << test32 << ", " << test33 << std::endl;
   std::cout << "FOR impl.: " << test34 << ", " << test35 << ", " << test36 << std::endl;
+
+  std::vector<double> test4 = WignerSymbols::wigner3j(992, 1243, 196, -901, 705);
+  double test41 = WignerSymbols::wigner3j(529, 992, 1243, 196, -901, 705);
+  double test42 = WignerSymbols::wigner3j_f(529, 992, 1243, 196, -901, 705);
+  std::cout << "C++ impl.: " << test41 << std::endl;
+  std::cout << "FOR impl.: " << test42 << std::endl;
   std::cout << std::endl;
 
   return 0;
