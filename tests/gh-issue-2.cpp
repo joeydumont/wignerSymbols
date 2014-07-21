@@ -8,12 +8,12 @@
 /*! \file gh-issue-1.cpp
  *  \author Joey Dumont <joey.dumont@gmail.com>
  *  \since 2014-07-11
- *  \brief Tests Issue 1 of WignerSymbols (see valandil.github.com/wignerSymbols.
+ *  \brief Tests Issue 2 of WignerSymbols (see valandil.github.com/wignerSymbols.
  *  \copyright LGPL
- * This file tests the bug described in Issue #1 of WignerSymbols (GitHub).
+ * This file tests the bug described in Issue #2 of WignerSymbols (GitHub).
  * It seems that for some values of l1, the algorithm returns a set 
  * of zeros even though it should return proper coefficients. 
- * Permuting the l's lead to the proper output. 
+ * 
  */
 
 #include <wignerSymbols.h>
@@ -66,9 +66,13 @@ int main (int argc, char* argv[])
   std::cout << "FOR impl.: " << test42 << std::endl;
   std::cout << std::endl;
 
-std::vector<double> test5 = WignerSymbols::wigner3j(856, 1200, 464, -828, 364);
-double test51 WignerSymbols::wigner3j(751, 856, 1200, 464, -828, 364);
-double test52 WignerSymbols::wigner3j_f(751, 856, 1200, 464, -828, 364);
+  std::cout << std::endl << "test5:" << std::endl;
+  std::vector<double> test5 = WignerSymbols::wigner3j(727, 1202, 533, -663, 130);
+  double test51 = WignerSymbols::wigner3j(970, 727, 1202, 533, -663, 130);
+  double test52 = WignerSymbols::wigner3j_f(970, 727, 1202, 533, -663, 130);
+  std::cout << "C++ impl.: " << test51 << std::endl;
+  std::cout << "FOR impl.: " << test52 << std::endl;
+  std::cout << std::endl;
 
 /*
 [ 841  379 1011 -631  313  318] -2.44096504011e-41 -0.0
@@ -77,6 +81,7 @@ double test52 WignerSymbols::wigner3j_f(751, 856, 1200, 464, -828, 364);
 [ 905  919 1670  869 -594 -275] -3.48516309858e-195 -0.0
 [ 895  574 1392  793 -365 -428] -1.41868655509e-146 -0.0
 */
+
   return 0;
 }
  
