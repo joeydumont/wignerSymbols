@@ -1,5 +1,6 @@
 Wigner Symbols
 ==============
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11076.png)](http://dx.doi.org/10.5281/zenodo.11076)
 
 A C++ ensemble of functions to compute the Wigner 3j- and 6j- symbols. It reimplements the algorithm designed
 by Schulten and Gordon in C++, but also contains the original Fortran implementation. 
