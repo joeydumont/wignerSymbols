@@ -60,6 +60,8 @@ int main (int argc, char* argv[])
   std::cout << "FOR impl.: " << test34 << ", " << test35 << ", " << test36 << std::endl;
 
   std::vector<double> test4 = WignerSymbols::wigner3j(992, 1243, 196, -901, 705);
+  std::vector<double> test4_f = WignerSymbols::wigner3j_f(992, 1243, 196, -901, 705);
+  std::cout << test4[100] << ", " << test4_f[100] << std::endl;
   double test41 = WignerSymbols::wigner3j(529, 992, 1243, 196, -901, 705);
   double test42 = WignerSymbols::wigner3j_f(529, 992, 1243, 196, -901, 705);
   std::cout << "C++ impl.: " << test41 << std::endl;
@@ -73,6 +75,8 @@ int main (int argc, char* argv[])
   std::cout << "C++ impl.: " << test51 << std::endl;
   std::cout << "FOR impl.: " << test52 << std::endl;
   std::cout << std::endl;
+
+  std::cout << test4[100] << ", " << test4_f[100] << std::endl;
 
 /*
 [ 841  379 1011 -631  313  318] -2.44096504011e-41 -0.0

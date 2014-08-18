@@ -42,6 +42,9 @@ extern "C"
   extern void drc6j_wrap(double,double,double,double,double,double*,double*,double*,int,int*);
 }
 
+/*! Compute a string of Wigner-3j symbols for given l2,l3,m1,m2,m3. */
+std::vector<double> wigner3j_f(double l2, double l3, double m1, double m2, double m3);
+
 /*! Computes the Wigner-3j symbol for given l1,l2,l3,m1,m2,m3. We
  * explicitly enforce the selection rules. */
 double wigner3j_f(double l1, double l2, double l3, double m1, double m2, double m3);
@@ -59,5 +62,8 @@ inline double clebschGordan_f(double l1, double l2, double l3, double m1, double
  * We explicitly enforce the selection rules. */
 double wigner6j_f(double l1, double l2, double l3, double l4, double l5, double l6);
 }
+
+/*! Computes a string of Wigner-6j symbols for given l2, l3, l4, l5, l6. */
+std::vector<double> wigner6j_f(double l2, double l3, double l4, double l5, double l6);
 
 #endif // WIGNER_SYMBOLS_FORTRAN_H
