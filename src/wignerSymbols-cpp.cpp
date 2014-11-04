@@ -13,7 +13,7 @@ std::vector<double> wigner3j(double l2, double l3,
 			     double m1, double m2, double m3)
 {
 	// We compute the numeric limits of double precision. 
-	double huge = sqrt(std::numeric_limits<double>::max()/40.0);
+	double huge = sqrt(std::numeric_limits<double>::max()/20.0);
 	double srhuge = sqrt(huge);
 	double tiny = std::numeric_limits<double>::min();
 	double srtiny = sqrt(tiny);

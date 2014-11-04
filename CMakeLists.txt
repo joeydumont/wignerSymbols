@@ -2,7 +2,7 @@
 project(wignerSymbols)
 set (wignerSymbols_VERSION_MAJOR 0)
 set (wignerSymbols_VERSION_MINOR 1)
-set (wignerSymbols_VERSION_RELEASE 2)
+set (wignerSymbols_VERSION_RELEASE 3)
 
 # CMake config
 cmake_minimum_required(VERSION 2.8)

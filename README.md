@@ -4,7 +4,7 @@ Wigner Symbols
 
 A C++ ensemble of functions to compute the Wigner 3j- and 6j- symbols. It reimplements the algorithm designed
 by Schulten and Gordon in C++, but also contains the original Fortran implementation. 
-It can act either as a complelte C++ replacement to the original Fortran implementation, 
+It can act either as a complete C++ replacement to the original Fortran implementation, 
 or a C++ interface to them. See the API docs for details. 
 It can either compute an array of Wigner 3j or 6j symbols, or a single
 coefficient. It also computes the Clebsch-Gordan coefficients.

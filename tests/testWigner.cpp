@@ -31,6 +31,8 @@ double timingWignerSymbolsF(double l2, double l3, double m1, double m2, double m
 
 int main(int argc, char* argv[])
 {
+  // We evalaute ThreeJ((1,0),(2,0),(1,0))
+  std::cout << WignerSymbols::wigner3j(1,2,1,0,0,0) << std::endl;
 	// We time the computation for different sizes.
 	int N = 500;
 	double l2(500.0),m1(-10.0),m2(60.0),m3(-50.0);
