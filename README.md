@@ -1,5 +1,7 @@
 Wigner Symbols
 ==============
+
+[![Join the chat at https://gitter.im/valandil/wignerSymbols](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/valandil/wignerSymbols?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11076.png)](http://dx.doi.org/10.5281/zenodo.11076)
 
 A C++ ensemble of functions to compute the Wigner 3j- and 6j- symbols. It reimplements the algorithm designed
