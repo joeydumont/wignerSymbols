@@ -3,7 +3,7 @@
  * Lesser Public License. If a copy of the LGPL was not -/
  * distributed with this file, you can obtain one at    -/
  * https://www.gnu.org/licenses/lgpl.html.              -/
- ********************************************************/ 
+ ********************************************************/
 
 #include "../include/wignerSymbols/commonFunctions.h"
 #include "../include/wignerSymbols/wignerSymbols-cpp.h"
@@ -12,7 +12,7 @@ namespace WignerSymbols {
 std::vector<double> wigner3j(double l2, double l3,
 			     double m1, double m2, double m3)
 {
-	// We compute the numeric limits of double precision. 
+	// We compute the numeric limits of double precision.
 	double huge = sqrt(std::numeric_limits<double>::max()/20.0);
 	double srhuge = sqrt(huge);
 	double tiny = std::numeric_limits<double>::min();
@@ -29,7 +29,7 @@ std::vector<double> wigner3j(double l2, double l3,
 
 	if (!select) return std::vector<double>(1,0.0);
 
-	// We compute the limits of l1. 
+	// We compute the limits of l1.
 	double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
 	double l1max = l2+l3;
 
@@ -46,10 +46,10 @@ std::vector<double> wigner3j(double l2, double l3,
 	// Another special case where the recursion relation fails.
 	else
 	{
-		// We start with an arbitrary value. 
+		// We start with an arbitrary value.
 		thrcof[0] = srtiny;
 
-		// From now on, we check the variation of |alpha(l1)|. 
+		// From now on, we check the variation of |alpha(l1)|.
 		double alphaNew, l1(l1min);
 		if (l1min==0.0)
 			alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
@@ -63,20 +63,20 @@ std::vector<double> wigner3j(double l2, double l3,
 		// If size > 2, we start the forward recursion.
 		if (size>2)
 		{
-			// We start with an arbitrary value. 
+			// We start with an arbitrary value.
 			thrcof[0] = srtiny;
-	
-			// From now on, we check the variation of |alpha(l1)|. 
+
+			// From now on, we check the variation of |alpha(l1)|.
 			double alphaOld, alphaNew, beta, l1(l1min);
 			if (l1min==0.0)
 				alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
 			else
 				alphaNew = -wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
 							/(l1min*wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
-	
+
 			// We compute the two-term recursion.
 			thrcof[1] = alphaNew*thrcof[0];
-	
+
 			// We compute the rest of the recursion.
 			int i = 1;
 			bool alphaVar = false;
@@ -86,17 +86,17 @@ std::vector<double> wigner3j(double l2, double l3,
 				i++;					// Next term in recursion
 				alphaOld = alphaNew;	// Monitoring of |alpha(l1)|.
 				l1 += 1.0;				// l1 = l1+1
-	
-				// New coefficients in recursion. 
+
+				// New coefficients in recursion.
 				alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
 							/(l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
-	
+
 				beta = -(l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3)
 						/(l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
-	
-				// Application of the recursion. 
+
+				// Application of the recursion.
 				thrcof[i] = alphaNew*thrcof[i-1]+beta*thrcof[i-2];
-	
+
 				// We check if we are overflowing.
 				if (std::fabs(thrcof[i])>srhuge)
 				{
@@ -104,57 +104,57 @@ std::vector<double> wigner3j(double l2, double l3,
 					for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.begin()+i; ++it)
 					{
 						//if (std::fabs(*it) < srtiny) *it = 0;
-						//else 
+						//else
 						*it /= srhuge;
 					}
 				}
-	
+
 				// This piece of code checks whether we have reached
-				// the classical region. If we have, the second if 
+				// the classical region. If we have, the second if
 				// sets alphaVar to true and we break this loop at the
-				// next iteration because we need thrcof(l1mid+1) to 
+				// next iteration because we need thrcof(l1mid+1) to
 				// compute the scalar lambda.
 				if (alphaVar) break;
 
 				if (std::fabs(alphaNew)-std::fabs(alphaOld)>0.0)
 					alphaVar=true;
-	
+
 			}	while (i<(size-1));	// Loop stops when we have computed all values.
-	
+
 			// If this is the case, we have stumbled upon a classical region.
 			// We start the backwards recursion.
 			if (i!=size-1)
 			{
 				// We keep the two terms around l1mid to compute the factor later.
 				double l1midm1(thrcof[i-2]),l1mid(thrcof[i-1]),l1midp1(thrcof[i]);
-	
-				// We compute the backward recursion by providing an arbitrary 
+
+				// We compute the backward recursion by providing an arbitrary
 				// startint value.
 				thrcof[size-1] = srtiny;
-	
+
 				// We compute the two-term recursion.
 				l1 = l1max;
 				alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
 								/((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
 				thrcof[size-2] = alphaNew*thrcof[size-1];
-	
+
 				// We compute the rest of the backward recursion.
 				int j = size-2;
 				do
 				{
 					// Bookkeeping
-					j--;			// Previous term in recursion. 
+					j--;			// Previous term in recursion.
 					l1 -= 1.0;		// l1 = l1-1
-	
-					// New coefficients in recursion. 
+
+					// New coefficients in recursion.
 					alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
 								/((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
 					beta = -l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3)
 									/((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
-	
-					// Application of the recursion. 
+
+					// Application of the recursion.
 					thrcof[j] = alphaNew*thrcof[j+1]+beta*thrcof[j+2];
-	
+
 					// We check if we are overflowing.
 					if (std::fabs(thrcof[j]>srhuge))
 					{
@@ -162,17 +162,17 @@ std::vector<double> wigner3j(double l2, double l3,
 						for (std::vector<double>::iterator it = thrcof.begin()+j; it != thrcof.end(); ++it)
 						{
 							//if (std::fabs(*it) < srtiny) *it = 0;
-							//else 
+							//else
 							*it /= srhuge;
 						}
 					}
-			
+
 				} while (j>(i-2)); // Loop stops when we are at l1=l1mid-1.
-	
+
 				// We now compute the scaling factor for the forward recursion.
 				double lambda = (l1midp1*thrcof[j+2]+l1mid*thrcof[j+1]+l1midm1*thrcof[j])
 										/(l1midp1*l1midp1+l1mid*l1mid+l1midm1*l1midm1);
-	
+
 				// We scale the forward recursion.
 				for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.begin()+j; ++it)
 				{
@@ -202,15 +202,15 @@ std::vector<double> wigner3j(double l2, double l3,
 	return thrcof;
 }
 
-double wigner3j(double l1, double l2, double l3, 
+double wigner3j(double l1, double l2, double l3,
 					double m1, double m2, double m3)
 {
 	// We enforce the selection rules.
 	bool select(true);
-	select = ( 
-		   std::fabs(m1+m2+m3)<1.0e-10 
+	select = (
+		   std::fabs(m1+m2+m3)<1.0e-10
 		&& std::floor(l1+l2+l3)==(l1+l2+l3)
-		&& l3 >= std::fabs(l1-l2) 
+		&& l3 >= std::fabs(l1-l2)
 		&& l3 <= l1+l2
 		&& std::fabs(m1) <= l1
 		&& std::fabs(m2) <= l2
@@ -231,18 +231,18 @@ double wigner3j(double l1, double l2, double l3,
 std::vector<double> wigner6j(double l2, double l3,
 					double l4, double l5, double l6)
 {
-	// We compute the numeric limits of double precision. 
+	// We compute the numeric limits of double precision.
 	double huge = std::numeric_limits<double>::max();
 	double srhuge = sqrt(huge);
 	double tiny = std::numeric_limits<double>::min();
 	double srtiny = sqrt(tiny);
 	double eps = std::numeric_limits<double>::epsilon();
 
-	// We enforce the selection rules. 
+	// We enforce the selection rules.
 	bool select(true);
 
 	// Triangle relations for the four tryads
-	select = ( 
+	select = (
 		std::fabs(l4-l2) <= l6 && l6 <= l4+l2
 		&& std::fabs(l4-l5) <= l3 && l3 <= l4+l5
 		);
@@ -273,7 +273,7 @@ std::vector<double> wigner6j(double l2, double l3,
 	// Otherwise, we start the forward recursion.
 	else
 	{
-		// We start with an arbitrary value. 
+		// We start with an arbitrary value.
 		sixcof[0] = srtiny;
 
 		// From now on, we check the variation of |alpha(l1)|.
@@ -291,10 +291,10 @@ std::vector<double> wigner6j(double l2, double l3,
 
 		if (size>2)
 		{
-			// We start with an arbitrary value. 
+			// We start with an arbitrary value.
 			sixcof[0] = srtiny;
-	
-			// From now on, we check the variation of |alpha(l1)|. 
+
+			// From now on, we check the variation of |alpha(l1)|.
 			double alphaOld, alphaNew, beta, l1(l1min);
 			if (l1min==0)
 				alphaNew = -(l2*(l2+1.0)+l3*(l3+1.0)+l5*(l5+1.0)+l6*(l6+1.0)-2.0*l4*(l4+1.0))/wigner6j_auxA(1.0,l2,l3,l4,l5,l6);
@@ -302,10 +302,10 @@ std::vector<double> wigner6j(double l2, double l3,
 			else
 				alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
 							/(l1min*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
-	
+
 			// We compute the two-term recursion.
 			sixcof[1] = alphaNew*sixcof[0];
-	
+
 			// We compute the rest of the recursion.
 			unsigned int i = 1;
 			bool alphaVar = false;
@@ -315,17 +315,17 @@ std::vector<double> wigner6j(double l2, double l3,
 				i++;					// Next term in recursion
 				alphaOld = alphaNew;	// Monitoring of |alpha(l1)|.
 				l1 += 1.0;				// l1 = l1+1
-	
-				// New coefficients in recursion. 
+
+				// New coefficients in recursion.
 				alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
 							/(l1*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
-	
+
 				beta = -(l1+1.0)*wigner6j_auxA(l1,l2,l3,l4,l5,l6)
 						/(l1*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6));
-	
-				// Application of the recursion. 
+
+				// Application of the recursion.
 				sixcof[i] = alphaNew*sixcof[i-1]+beta*sixcof[i-2];
-	
+
 				// We check if we are overflowing.
 				if (std::fabs(sixcof[i]>srhuge))
 				{
@@ -335,53 +335,53 @@ std::vector<double> wigner6j(double l2, double l3,
 						*it /= srhuge;
 					}
 				}
-	
+
 				// This piece of code checks whether we have reached
-				// the classical region. If we have, the second if 
+				// the classical region. If we have, the second if
 				// sets alphaVar to true and we break this loop at the
-				// next iteration because we need sixcof(l1mid+1) to 
+				// next iteration because we need sixcof(l1mid+1) to
 				// compute the scalar.
 				if (alphaVar) break;
-	
+
 				if (std::fabs(alphaNew)-std::fabs(alphaOld)>0.0)
 					alphaVar=true;
-	
+
 			}	while (i<(size-1));	// Loop stops when we have computed all values.
-	
+
 			// If this is the case, we have stumbled upon a classical region.
 			// We start the backwards recursion.
 			if (i!=size-1)
 			{
 				// We keep the two terms around l1mid to compute the factor later.
 				double l1midm1(sixcof[i-2]),l1mid(sixcof[i-1]),l1midp1(sixcof[i]);
-	
-				// We compute the backward recursion by providing an arbitrary 
+
+				// We compute the backward recursion by providing an arbitrary
 				// startint value.
 				sixcof[size-1] = srtiny;
-	
+
 				// We compute the two-term recursion.
 				l1 = l1max;
 				alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
 								/((l1+1.0)*wigner6j_auxA(l1,l2,l3,l4,l5,l6));
 				sixcof[size-2] = alphaNew*sixcof[size-1];
-	
+
 				// We compute the rest of the backward recursion.
 				unsigned int j = size-2;
 				do
 				{
 					// Bookkeeping
-					j--;			// Previous term in recursion. 
+					j--;			// Previous term in recursion.
 					l1 -= 1.0;		// l1 = l1-1
-	
-					// New coefficients in recursion. 
+
+					// New coefficients in recursion.
 					alphaNew = -wigner6j_auxB(l1,l2,l3,l4,l5,l6)
 								/((l1+1.0)*wigner6j_auxA(l1,l2,l3,l4,l5,l6));
 					beta = -l1*wigner6j_auxA(l1+1.0,l2,l3,l4,l5,l6)
 								/((l1+1.0)*wigner6j_auxA(l1,l2,l3,l4,l5,l6));
-	
-					// Application of the recursion. 
+
+					// Application of the recursion.
 					sixcof[j] = alphaNew*sixcof[j+1]+beta*sixcof[j+2];
-	
+
 					// We check if we are overflowing.
 					if (std::fabs(sixcof[j]>srhuge))
 					{
@@ -391,13 +391,13 @@ std::vector<double> wigner6j(double l2, double l3,
 							*it /= srhuge;
 						}
 					}
-			
+
 				} while (j>(i-2)); // Loop stops when we are at l1=l1mid-1.
-	
+
 				// We now compute the scaling factor for the forward recursion.
 				double lambda = (l1midp1*sixcof[j+2]+l1mid*sixcof[j+1]+l1midm1*sixcof[j])
 									/(l1midp1*l1midp1+l1mid*l1mid+l1midm1*l1midm1);
-	
+
 				// We scale the forward recursion.
 				for (std::vector<double>::iterator it = sixcof.begin(); it != sixcof.begin()+j; ++it)
 				{
@@ -422,14 +422,14 @@ std::vector<double> wigner6j(double l2, double l3,
 	return sixcof;
 }
 
-double wigner6j(double l1, double l2, double l3, 
+double wigner6j(double l1, double l2, double l3,
 					double l4, double l5, double l6)
 {
-	// We enforce the selection rules. 
+	// We enforce the selection rules.
 	bool select(true);
 
 	// Triangle relations for the four tryads
-	select = ( 
+	select = (
 		   std::fabs(l1-l2) <= l3 && l3 <= l1+l2
 		&& std::fabs(l1-l5) <= l6 && l6 <= l1+l5
 		&& std::fabs(l4-l2) <= l6 && l6 <= l4+l2
@@ -463,7 +463,7 @@ double wigner3j_auxA(double l1, double l2, double l3,
 	return sqrt(T1*T2*T3);
 }
 
-double wigner3j_auxB(double l1, double l2, double l3, 
+double wigner3j_auxB(double l1, double l2, double l3,
 						double m1, double m2, double m3)
 {
 	double T1 = -(2.0*l1+1.0);

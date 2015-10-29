@@ -1,26 +1,28 @@
 # Name of project
 project(wignerSymbols)
 set (wignerSymbols_VERSION_MAJOR 0)
-set (wignerSymbols_VERSION_MINOR 1)
-set (wignerSymbols_VERSION_RELEASE 3)
+set (wignerSymbols_VERSION_MINOR 2)
+set (wignerSymbols_VERSION_RELEASE 0)
 
 # CMake config
 cmake_minimum_required(VERSION 2.8)
-set (CMAKE_INSTALL_PREFIX /usr/)
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set (CMAKE_INSTALL_PREFIX /usr)
+endif()
 
 # Compiler config
 enable_language (Fortran)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -march=native")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -march=native")
 
 # Included files
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include INC_LIST)
 
 # Source files
 aux_source_directory(./src SRC_LIST)
 
 # Build a shared library
-add_library(${PROJECT_NAME} SHARED 
-    ${SRC_LIST} 
+add_library(${PROJECT_NAME} SHARED
+    ${SRC_LIST}
     "./src/wignerSymbols-fortran.f"
     "./src/machine.for"
     "./src/fdump.f"

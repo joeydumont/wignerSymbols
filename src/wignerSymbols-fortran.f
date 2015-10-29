@@ -3,7 +3,7 @@ C This source code is subject to the terms of the GNU  -/
 C Lesser Public License. If a copy of the LGPL was not -/
 C distributed with this file, you can obtain one at    -/
 C https://www.gnu.org/licenses/lgpl.html.              -/
-C ******************************************************/ 
+C ******************************************************/
 
 *DECK DRC3JJ
       SUBROUTINE DRC3JJ (L2, L3, M2, M3, L1MIN, L1MAX, THRCOF, NDIM,

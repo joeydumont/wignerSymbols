@@ -3,7 +3,7 @@
  * Lesser Public License. If a copy of the LGPL was not -/
  * distributed with this file, you can obtain one at    -/
  * https://www.gnu.org/licenses/lgpl.html.              -/
- ********************************************************/ 
+ ********************************************************/
 
 #ifndef WIGNER_SYMBOLS_H
 #define WIGNER_SYMBOLS_H
