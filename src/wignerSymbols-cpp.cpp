@@ -223,7 +223,7 @@ double wigner3j(double l1, double l2, double l3,
 	double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
 
 	// We fetch the proper value in the array.
-	int index = (int)l1-l1min;
+	int index = (int)(l1-l1min);
 
 	return wigner3j(l2,l3,m1,m2,m3)[index];
 }
@@ -448,7 +448,7 @@ double wigner6j(double l1, double l2, double l3,
 
 	// We compute l1min and the position of the array we will want.
 	double l1min = std::max(std::fabs(l2-l3),std::fabs(l5-l6));
-	int index = (int)l1-l1min;
+	int index = (int)(l1-l1min);
 
 	return wigner6j(l2,l3,l4,l5,l6)[index];
 }
