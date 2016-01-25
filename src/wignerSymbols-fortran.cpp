@@ -62,7 +62,7 @@ double wigner3j_f(double l1, double l2, double l3,
   drc3jj_wrap(l2,l3,m2,m3,&l1min,&l1max,thrcof,size,&ierr);
 
   // We fetch and return the value with the proper l1 value.
-  int index = (int)l1-l1min;
+  int index = (int)(l1-l1min);
   return thrcof[index];
 }
 
@@ -102,7 +102,7 @@ double wigner6j_f(double l1, double l2, double l3,
   drc6j_wrap(l2,l3,l4,l5,l6,&l1min,&l1max,sixcof,size,&ierr);
 
   // We fetch and return the coefficient with the proper l1 value.
-  int index = (int)l1-l1min;
+  int index = (int)(l1-l1min);
   return sixcof[index];
 }
 }
