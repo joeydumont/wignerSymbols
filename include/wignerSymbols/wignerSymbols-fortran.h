@@ -58,12 +58,14 @@ inline double clebschGordan_f(double l1, double l2, double l3, double m1, double
   return (pow(-1.0,l1-l2+m3)*sqrt(2.0*l3+1.0)*wigner3j_f(l1,l2,l3,m1,m2,-m3));
 }
 
+/*! Computes a string of Wigner-6j symbols for given l2, l3, l4, l5, l6. */
+std::vector<double> wigner6j_f(double l2, double l3, double l4, double l5, double l6);
+
 /*! Computes the Wigner-6j symbol for given, l1, l2, l3, l4, l5, l6.
  * We explicitly enforce the selection rules. */
 double wigner6j_f(double l1, double l2, double l3, double l4, double l5, double l6);
-}
 
-/*! Computes a string of Wigner-6j symbols for given l2, l3, l4, l5, l6. */
-std::vector<double> wigner6j_f(double l2, double l3, double l4, double l5, double l6);
+} // namespace WignerSymbols
+
 
 #endif // WIGNER_SYMBOLS_FORTRAN_H
