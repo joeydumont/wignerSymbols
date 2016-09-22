@@ -228,6 +228,15 @@ double wigner3j(double l1, double l2, double l3,
 	return wigner3j(l2,l3,m1,m2,m3)[index];
 }
 
+std::vector<double> wigner3j_simple(double l2,
+	                                  double l3,
+	                                  double m1,
+	                                  double m2,
+	                                  double m3)
+{
+	//
+}
+
 std::vector<double> wigner6j(double l2, double l3,
 					double l4, double l5, double l6)
 {
