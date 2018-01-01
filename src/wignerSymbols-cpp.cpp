@@ -454,7 +454,7 @@ double wigner6j(double l1, double l2, double l3,
 }
 
 double wigner3j_auxA(double l1, double l2, double l3,
-						double m1, double m2, double m3)
+                                               double m1, double /*m2*/, double /*m3*/)
 {
 	double T1 = l1*l1-pow(l2-l3,2.0);
 	double T2 = pow(l2+l3+1.0,2.0)-l1*l1;
@@ -475,7 +475,7 @@ double wigner3j_auxB(double l1, double l2, double l3,
 }
 
 double wigner6j_auxA(double l1, double l2, double l3,
-						double l4, double l5, double l6)
+						double /*l4*/, double l5, double l6)
 {
 	double T1 = l1*l1-pow(l2-l3,2.0);
 	double T2 = pow(l2+l3+1.0,2.0)-l1*l1;
