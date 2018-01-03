@@ -18,7 +18,7 @@
 
 #include <wignerSymbols.h>
 
-int main (int argc, char* argv[])
+int main ()
 {
   double test11 = WignerSymbols::wigner3j(325, 999, 1221, 280, 899, -1179);
   double test12 = WignerSymbols::wigner3j(999, 1221, 325,  899, -1179, 280);

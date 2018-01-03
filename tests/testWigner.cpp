@@ -52,6 +52,10 @@ int main(int argc, char* argv[])
 	timesF.save("timesF.dat",raw_ascii);
 
 	// Generate values for l1, l2 and derive the rest of the allowed values.
+        if (argc != 2) {
+            std::cerr << "Usage: " << argv[0] << " <lMax>\n";
+            return 1;
+        }
 	double lMax = atof(argv[1]);
 	colvec lVec = linspace(0,lMax,lMax+1);
 
@@ -204,7 +208,7 @@ double seconSumOverL3(double l1, double l2, double l6)
 
 	double value = (l6==0.0 ? sqrt((2.*l1+1.)*(2.*l2+1.)) : 0.0) ;
 
-	double diff = std::fabs(value-sum);
+	//double diff = std::fabs(value-sum);
 
 	return std::fabs(value-sum);
 	
@@ -229,7 +233,7 @@ double timingWignerSymbolsF(double l2, double l3, double m1, double m2, double m
 	clock_t start = clock();
 
 	// We call the subroutine.
-	double test = WignerSymbols::wigner3j(l2+l3,l2,l3,m1,m2,m3);
+	WignerSymbols::wigner3j(l2+l3,l2,l3,m1,m2,m3);
 
 	clock_t end = clock();
 

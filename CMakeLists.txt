@@ -14,7 +14,7 @@ endif()
 
 # Compiler config
 enable_language (Fortran)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -march=native")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wextra -Wpedantic -Werror -march=native")
 
 # Coverage report
 option(WITH_COVERAGE "Generate code coverage report" OFF)
@@ -25,7 +25,7 @@ if(WITH_COVERAGE)
 endif()
 
 # Included files
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include INC_LIST)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Source files
 aux_source_directory(./src SRC_LIST)

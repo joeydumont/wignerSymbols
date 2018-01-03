@@ -18,7 +18,7 @@
 
 #include <wignerSymbols.h>
 
-int main (int argc, char* argv[])
+int main ()
 {
   double test11 = WignerSymbols::wigner3j(325, 999, 1221, 280, 899, -1179);
   double test12 = WignerSymbols::wigner3j(999, 1221, 325,  899, -1179, 280);
@@ -69,6 +69,9 @@ int main (int argc, char* argv[])
   std::vector<double> test5 = WignerSymbols::wigner3j(856, 1200, 464, -828, 364);
   double test51 = WignerSymbols::wigner3j(751, 856, 1200, 464, -828, 364);
   double test52 = WignerSymbols::wigner3j_f(751, 856, 1200, 464, -828, 364);
+  std::cout << "C++ impl.: " << test51 << std::endl;
+  std::cout << "FOR impl.: " << test52 << std::endl;
+  std::cout << std::endl;
 
 /*
 [ 841  379 1011 -631  313  318] -2.44096504011e-41 -0.0
