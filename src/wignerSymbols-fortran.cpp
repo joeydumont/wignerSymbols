@@ -18,17 +18,13 @@ std::vector<double> wigner3j_f(double l2, double l3, double m1, double m2, doubl
 
   // We prepare the output values.
   double l1min, l1max;
-  double thrcof [size];
+  std::vector<double> thrcof(size);
   int ierr;
 
   // External function call.
-  drc3jj_wrap(l2,l3,m2,m3,&l1min,&l1max,thrcof,size,&ierr);
+  drc3jj_wrap(l2,l3,m2,m3,&l1min,&l1max,thrcof.data(),size,&ierr);
 
-  // We copy the values of the array into a vector.
-  std::vector<double> thrcof_v(size);
-  thrcof_v.assign(thrcof, thrcof + size);
-
-  return thrcof_v;
+  return thrcof;
 }
 
 /*! Computes the Wigner-3j symbol for given l1,l2,l3,m1,m2,m3. We
@@ -55,11 +51,11 @@ double wigner3j_f(double l1, double l2, double l3,
 
   // We prepare the output values.
   double l1min, l1max;
-  double thrcof [size];
+  std::vector<double> thrcof(size);
   int ierr;
 
   // External function call.
-  drc3jj_wrap(l2,l3,m2,m3,&l1min,&l1max,thrcof,size,&ierr);
+  drc3jj_wrap(l2,l3,m2,m3,&l1min,&l1max,thrcof.data(),size,&ierr);
 
   // We fetch and return the value with the proper l1 value.
   int index = (int)(l1-l1min);
@@ -95,11 +91,11 @@ double wigner6j_f(double l1, double l2, double l3,
 
   // We prepare the output values
   double l1min, l1max;
-  double sixcof [size];
+  std::vector<double> sixcof(size);
   int ierr;
 
   // External function call
-  drc6j_wrap(l2,l3,l4,l5,l6,&l1min,&l1max,sixcof,size,&ierr);
+  drc6j_wrap(l2,l3,l4,l5,l6,&l1min,&l1max,sixcof.data(),size,&ierr);
 
   // We fetch and return the coefficient with the proper l1 value.
   int index = (int)(l1-l1min);

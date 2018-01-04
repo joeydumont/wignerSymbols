@@ -1,5 +1,7 @@
 # Name of project
 project(wignerSymbols)
+enable_testing()
+
 set (wignerSymbols_VERSION_MAJOR 0)
 set (wignerSymbols_VERSION_MINOR 2)
 set (wignerSymbols_VERSION_RELEASE 0)
@@ -12,10 +14,18 @@ endif()
 
 # Compiler config
 enable_language (Fortran)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -march=native")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wextra -Wpedantic -Werror -march=native")
+
+# Coverage report
+option(WITH_COVERAGE "Generate code coverage report" OFF)
+if(WITH_COVERAGE)
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the build type" FORCE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+  link_libraries(gcov)
+endif()
 
 # Included files
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include INC_LIST)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Source files
 aux_source_directory(./src SRC_LIST)
@@ -39,6 +49,8 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}
     PROPERTIES
         VERSION ${wignerSymbols_VERSION_MAJOR}.${wignerSymbols_VERSION_MINOR}.${wignerSymbols_VERSION_RELEASE}
         SOVERSION ${wignerSymbols_VERSION_MAJOR}.${wignerSymbols_VERSION_MINOR}.${wignerSymbols_VERSION_RELEASE})
+
+add_subdirectory(tests)
 
 # Install directories
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)

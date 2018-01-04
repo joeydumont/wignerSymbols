@@ -1,0 +1,24 @@
+dist: trusty
+sudo: false
+
+language: cpp
+
+os: linux
+
+addons:
+  apt:
+    packages:
+    - gfortran
+    - libarmadillo-dev
+
+compiler:
+  - clang
+  - gcc
+
+script:
+  - mkdir build
+  - cd build
+  - cmake -DWITH_COVERAGE=On ..
+  - make -j 2
+  - make test
+  - curl -s https://codecov.io/bash | bash -
