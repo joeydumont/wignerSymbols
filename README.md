@@ -1,6 +1,7 @@
 Wigner Symbols
 ==============
-
+[![Build status](https://travis-ci.org/valandil/wignerSymbols.svg?branch=master)](https://travis-ci.org/valandil/wignerSymbols)
+[![Code coverage report](https://codecov.io/gh/valandil/wignerSymbols/branch/master/graph/badge.svg)](https://codecov.io/gh/valandil/wignerSymbols)
 [![Join the chat at https://gitter.im/valandil/wignerSymbols](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/valandil/wignerSymbols?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![DOI](https://zenodo.org/badge/5354/valandil/wignerSymbols.svg)](https://zenodo.org/badge/latestdoi/5354/valandil/wignerSymbols)
 
