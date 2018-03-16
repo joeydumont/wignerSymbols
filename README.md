@@ -72,7 +72,7 @@ evaluation of Wigner symbols.
     Computes a specific Wigner 6j symbol.
 
 ## Bibliography 
-  + K. Schulten and R. G. Gordon, _Recursive evaluation of 3j and 6j coefficients_, Comput. Phys. Commun. **11**, 269–278 (1976). DOI: [10.1016/0010-4655(76)90058-8](/http://dx.doi.org/10.1016/0010-4655(76)90058-8)
-  + K. Schulten, _Exact recursive evaluation of 3j- and 6j-coefficients for quantum-mechanical coupling of angular momenta_, J. Math. Phys. **16**, 1961 (1975). DOI: [10.1063/1.522426](http://dx.doi.org/10.1063/1.522426).
-  + J. Luscombe and M. Luban, _Simplified recursive algorithm for Wigner 3j and 6j symbols_, Phys. Rev. E **57**, 7274–7277 (1998). DOI: [10.1103/PhysRevE.57.7274](http://dx.doi.org/10.1103/PhysRevE.57.7274).
+  + K. Schulten and R. G. Gordon, _Recursive evaluation of 3j and 6j coefficients_, Comput. Phys. Commun. **11**, 269–278 (1976). DOI: [10.1016/0010-4655(76)90058-8](https://dx.doi.org/10.1016/0010-4655(76)90058-8)
+  + K. Schulten, _Exact recursive evaluation of 3j- and 6j-coefficients for quantum-mechanical coupling of angular momenta_, J. Math. Phys. **16**, 1961 (1975). DOI: [10.1063/1.522426](https://dx.doi.org/10.1063/1.522426).
+  + J. Luscombe and M. Luban, _Simplified recursive algorithm for Wigner 3j and 6j symbols_, Phys. Rev. E **57**, 7274–7277 (1998). DOI: [10.1103/PhysRevE.57.7274](https://dx.doi.org/10.1103/PhysRevE.57.7274).
 
