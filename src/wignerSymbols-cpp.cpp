@@ -429,7 +429,7 @@ double wigner6j(double l1, double l2, double l3,
 	bool select(true);
 
 	// Triangle relations for the four tryads
-	select = (
+	select &= (
 		   std::fabs(l1-l2) <= l3 && l3 <= l1+l2
 		&& std::fabs(l1-l5) <= l6 && l6 <= l1+l5
 		&& std::fabs(l4-l2) <= l6 && l6 <= l4+l2
@@ -437,7 +437,7 @@ double wigner6j(double l1, double l2, double l3,
 		);
 
 	// Sum rule of the tryads
-	select = (
+	select &= (
 		   std::floor(l1+l2+l3)==(l1+l2+l3)
 		&& std::floor(l1+l5+l6)==(l1+l5+l6)
 		&& std::floor(l4+l2+l6)==(l4+l2+l6)
