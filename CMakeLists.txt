@@ -50,7 +50,9 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}
         VERSION ${wignerSymbols_VERSION_MAJOR}.${wignerSymbols_VERSION_MINOR}.${wignerSymbols_VERSION_RELEASE}
         SOVERSION ${wignerSymbols_VERSION_MAJOR}.${wignerSymbols_VERSION_MINOR}.${wignerSymbols_VERSION_RELEASE})
 
-add_subdirectory(tests)
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
 
 # Install directories
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
